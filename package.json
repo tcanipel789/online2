@@ -1,0 +1,28 @@
+{
+  "name": "online-application",
+  "version": "0.1.5",
+  "description": "NodeJs Server",
+  "main": "online.js",
+  "scripts": {
+    "start": "node online.js"
+  },
+  "dependencies": {
+    "body-parser": "1.13.3",
+    "express": "4.13.1",
+	"pg": "4.4.1",
+	"ftp": "0.3.10"
+  },
+  "engines": {
+    "node": "0.12.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tcanipel789/online"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "license": "MIT"
+}

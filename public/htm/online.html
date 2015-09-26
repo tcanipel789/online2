@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=1" name="viewport" /> 
+<html ng-app="onlineApp">
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<link rel="stylesheet" href="../css/footer.css">
+<script src="../lib/angular.min.js"></script>
+<script src="../lib/ui-bootstrap-0.13.0.min.js"></script>
+
+
+<body ng-controller="mainCtrl">
+
+
+<nav class="navbar navbar-default" ng-include="'./htm/nav.htm'"></nav>
+
+<div class="container" ng-controller="deviceCtrl" ng-show="playerVisible">
+	<div ng-include="'./htm/devices_Form.htm'"></div>
+	<div ng-include="'./htm/devices_List.htm'"></div>
+</div>
+<div class="container" ng-controller="mediaCtrl" ng-show="mediaVisible">
+	<div ng-include="'./htm/medias_Form.htm'"></div>
+	<div ng-include="'./htm/medias_List.htm'"></div>
+</div>
+
+<div class="container" ng-show="programVisible">
+	<div ng-include="'./htm/devices_List.htm'"></div>
+</div>
+
+<div class="container" ng-controller="broadcastCtrl" ng-show="broadcastVisible">
+	<div ng-include="'./htm/broadcasts_Form.htm'"></div>
+	<div ng-include="'./htm/broadcasts_List.htm'"></div>
+</div>
+
+<script src = "../js/onlineApp.js"></script>
+<script src="../js/mainCtrl.js"></script>
+<script src="../js/devicesCtrl.js"></script>
+<script src="../js/mediasCtrl.js"></script>
+<script src="../js/broadcastsCtrl.js"></script>
+
+<footer class="footer">
+  <div class="container"></div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+ <div ng-show="listVisible">
+
+ 
+<h3>Broadcasts  <button class="btn" ng-click="reload()">
+	<span ng-class="stylereload"></span>
+</button>
+<button class="btn btn-success" ng-click="addBroadcast()"><span class="glyphicon glyphicon-plus"/></button>
+</h3>
+ 
+<table class="table table-striped">
+  <thead><tr>
+    <th>Name</th>
+    <th>Progress</th>
+    <th>From</th>
+	<th>To</th>
+	<th class="text-right"><span  class="label label-default">{{broadcasts.length}}</span></th>
+  </tr></thead>
+  <tbody><tr ng-repeat="broadcast in broadcasts">
+   <td>
+	  <button class="btn btn-info" ng-click="editBroadcast(broadcast.id)" >{{ broadcast.name }}</button>
+	</td>
+    <td>
+	<div class="progress">
+		<div class="progress-bar" role="progressbar" aria-valuenow="{{ broadcast.progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ broadcast.progress }}%;">
+		{{ broadcast.progress }}%
+		</div>
+	</div>
+	</td>
+	<td><button class="btn disabled" >{{ broadcast.datefrom }}</button></td>
+	<td><button class="btn disabled" >{{ broadcast.dateto }}</button></td>
+	<td  class="col-md-6 text-right">
+	  <button class="btn" ng-click="removeBroadcast(broadcast.id)">
+        <span ng-class="styleremove" ></span>
+      </button>
+      <button class="btn" ng-click="editBroadcast(broadcast.id)">
+        <span class="glyphicon glyphicon-pencil"></span>
+      </button>
+	  <button class="btn disabled" >
+        <span class="glyphicon glyphicon-user"></span>
+      </button>
+    </td>
+  </tr></tbody>
+</table> 
+
+</div>

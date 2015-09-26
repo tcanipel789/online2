@@ -1,0 +1,92 @@
+<div ng-show="isVisible">
+<hr>
+
+<h3>Broadcast: {{name}}</h3>
+<form class="form-horizontal">
+<div class="form-group">
+  <label class="col-sm-2 control-label">Name :</label>
+  <div class="col-sm-4">
+    <input type="text" class="form-control" ng-model="$parent.name"  placeholder="-">
+  </div>
+  <label class="col-sm-2 control-label">Created:</label>
+  <div class="col-sm-4">
+    <input type="text" class="form-control" ng-model="$parent.created" ng-disabled="true" placeholder="-">
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-sm-2 control-label">To :</label>
+  <div class="col-sm-4">
+    <input type="text" class="form-control" ng-model="$parent.dateto" placeholder="-">
+  </div>
+   
+  <label class="col-sm-2 control-label">From :</label>
+  <div class="col-sm-4">
+    <input type="text" class="form-control" ng-model="$parent.datefrom"  placeholder="-">
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-2 control-label" ng-click="showTag()">Device Tags : </label>
+  <div class="col-sm-10" ng-show="isTansferVisible"><label><button class="btn disabled glyphicon glyphicon-transfer"/></label></div>
+  <div class="col-sm-10" ng-click="showTag()">
+	 <label ng-repeat="tag in tags | filter:{selected : true}" >&nbsp;<button class="btn disabled btn-info" >{{ tag.name }}</button>&nbsp;</label>
+  </div>
+</div>
+<div class="form-group" ng-show="tagVisible">
+<div class="panel panel-default  col-sm-offset-2">
+  <div class="panel-heading">Profiling Tags {{tagerror}}</div>
+  <div class="panel-body"> 
+<label ng-repeat="tag in tags">
+  &nbsp;<input
+    type="checkbox"
+    value="{{tag.name}}"
+    ng-checked="{{tag.selected}}"
+    ng-click="toggleSelection(tag)"> {{tag.name}}&nbsp;</label>
+</div>
+</div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-2 control-label" ng-click="showMedia()">Medias : </label>
+  <div class="col-sm-10" ng-show="isTansferVisibleMedia"><label><button class="btn disabled glyphicon glyphicon-transfer"/></label></div>
+  <div class="col-sm-10" ng-click="showMedia()">
+	 <label ng-repeat="media in medias | filter:{selected : true}" >&nbsp;<button class="btn disabled btn-info" >{{ media.name }}</button>&nbsp;</label>
+  </div>
+</div>
+<div class="form-group" ng-show="mediaVisible">
+<div class="panel panel-default  col-sm-offset-2">
+  <div class="panel-heading">Medias available {{mediaerror}}</div>
+  <div class="panel-body"> 
+<label ng-repeat="media in medias">
+  &nbsp;<input
+    type="checkbox"
+    value="{{media.name}}"
+    ng-checked="{{media.selected}}"
+    ng-click="toggleSelection(media)"> {{media.name}}&nbsp;</label>
+</div>
+</div>
+</div>
+
+
+<div class="form-group">
+  <label class="col-sm-2 control-label">Owner :</label>
+  <div class="col-sm-10">
+    <input type="text" class="form-control" ng-model="$parent.owner" placeholder="-">
+  </div>
+</div>
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+		<button type="submit" class="btn btn-success" ng-disabled="error || incomplete" ng-click="save()">
+		  <span class="{{styleSave}}"></span> Save Changes
+		</button>
+		<button class="btn btn-default"  ng-click="cancel()">
+		  Cancel
+		</button> 
+	</div>
+</div>
+</form>
+
+
+<br/><hr/>
+</div>

@@ -1,0 +1,21 @@
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">
+		<span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Online</a>
+    </div>
+	<div class="navbar-collapse" ng-class="{collapse: isCollapsed}">
+      <ul class="nav navbar-nav">
+        <li  ng-class="{active : playerVisible}"    ng-click="player() ; isCollapsed = !isCollapsed"><a href="#">Players</a></li>
+        <li  ng-class="{active : mediaVisible}"     ng-click="media(); isCollapsed = !isCollapsed"><a href="#">Medias</a></li>
+        <!-- <li  ng-class="{active : programVisible}"   ng-click="program(); isCollapsed = !isCollapsed"><a href="#">Programs</a></li> -->
+        <li  ng-class="{active : broadcastVisible}" ng-click="broadcast(); isCollapsed = !isCollapsed"><a href="#">Broadcasts</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#"><span class="glyphicon glyphicon-remove-circle"></span>&nbsp;Logout</a></li>
+      </ul>
+    </div>
+  </div>

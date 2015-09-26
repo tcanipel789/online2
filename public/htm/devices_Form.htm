@@ -1,0 +1,88 @@
+<div ng-show="isVisible">
+<hr>
+
+<h3 ng-hide="edit">Device: {{name}}</h3>
+<form class="form-horizontal">
+<div class="form-group">
+  <label class="col-sm-2 control-label">Status:</label>
+  <div class="col-sm-10">
+    <input type="text" class="form-control" ng-model="status" ng-disabled="!edit" placeholder="-">
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-2 control-label">Temperature :</label>
+  <div class="col-sm-4">
+    <input type="text" class="form-control" ng-model="temperature" ng-disabled="true" placeholder="-">
+  </div>
+  <label class="col-sm-2 control-label">Ip local :</label>
+  <div class="col-sm-4">
+    <input type="text" class="form-control" ng-model="localip" ng-disabled="true" placeholder="-">
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-sm-2 control-label">Last seen:</label>
+  <div class="col-sm-4">
+    <input type="text" class="form-control" ng-model="lastseen" ng-disabled="true" placeholder="-">
+  </div>
+    <label class="col-sm-2 control-label">Created:</label>
+  <div class="col-sm-4">
+    <input type="text" class="form-control" ng-model="created" ng-disabled="true" placeholder="-">
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-sm-2 control-label" ng-click="showTag()">Tags : </label>
+  <div class="col-sm-10" ng-show="isTansferVisible"><label><button class="btn disabled glyphicon glyphicon-transfer"/></label></div>
+  <div class="col-sm-10" ng-click="showTag()">
+	 <label ng-repeat="tag in tags | filter:{selected : true}" >&nbsp;<button class="btn disabled btn-info" >{{ tag.name }}</button>&nbsp;</label>
+  </div>
+</div>
+<div class="form-group" ng-show="tagVisible">
+<div class="panel panel-default  col-sm-offset-2">
+  <div class="panel-heading">Profiling Tags {{tagerror}}</div>
+  <div class="panel-body"> 
+<label ng-repeat="tag in tags">
+  &nbsp;<input
+    type="checkbox"
+    value="{{tag.name}}"
+    ng-checked="{{tag.selected}}"
+    ng-click="toggleSelection(tag)"
+  > {{tag.name}}
+&nbsp;</label>
+</div>
+</div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-2 control-label">Owner:</label>
+  <div class="col-sm-10">
+    <input type="text" class="form-control" ng-model="owner" placeholder="-">
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-sm-2 control-label">Description:</label>
+  <div class="col-sm-10">
+	 <textarea class="form-control" ng-model="$parent.description"></textarea>
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-sm-2 control-label">Memory:</label>
+  <div class="col-sm-10">
+	 <textarea class="form-control" ng-model="$parent.memory"></textarea>
+  </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+		<button type="submit" class="btn btn-success" ng-disabled="error || incomplete" ng-click="save()">
+		  <span class="{{styleSave}}"></span> Save Changes
+		</button>
+		<button class="btn btn-default"  ng-click="cancel()">
+		  Cancel
+		</button> 
+	</div>
+</div>
+</form>
+
+
+<br/><hr/>
+</div>

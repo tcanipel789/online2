@@ -1,0 +1,39 @@
+<div ng-show="listVisible">
+
+<h3>Devices  <button class="btn" ng-click="reload()">
+	<span ng-class="stylereload"></span>
+</button></h3>
+
+
+<table class="table table-striped">
+  <thead>
+	<tr>
+		<th>Status</th>
+		<th>Name</th>
+		<th>Created</th>
+		<th class="text-right"><span  class="label label-default">{{devices.length}}</span></th>
+	</tr>
+  </thead>
+  <tbody><tr ng-repeat="device in devices">
+    <td  class="col-md-2">
+		<button class="btn btn-success" ng-click="editDevice(device.id)">
+			online
+		</button>
+	</td>
+    <td  class="col-md-2">
+		<button class="btn disabled" >
+			{{ device.name }}
+		</button>
+    </td>
+	<td class="col-md-2"><button class="btn disabled" >{{ device.created }}</button></td>
+	<td  class="col-md-6 text-right">
+      <button class="btn" ng-click="editDevice(device.id)">
+        <span class="glyphicon glyphicon-pencil"></span>
+      </button>
+	  <button class="btn disabled" >
+        <span class="glyphicon glyphicon-user"></span>
+      </button>
+    </td>
+  </tr></tbody>
+</table> 
+</div>
