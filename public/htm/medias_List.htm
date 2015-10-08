@@ -20,7 +20,7 @@
     <td>
 			<button class="btn disabled" >{{ media.type }}</button>
     </td>
-	<td><button class="btn disabled" >{{ media.created }}</button></td>
+	<td><button class="btn disabled" am-time-ago="media.created"></button></td>
 	<td  class="col-md-6 text-right">
 	 <button class="btn" ng-click="removeMedia(media.id)">
         <span ng-class="styleremove" ></span>

@@ -10,7 +10,8 @@
     "body-parser": "1.13.3",
     "express": "4.13.1",
 	"pg": "4.4.1",
-	"ftp": "0.3.10"
+	"ftp": "0.3.10",
+	"angular-moment": "0.10.3"
   },
   "engines": {
     "node": "0.12.4"

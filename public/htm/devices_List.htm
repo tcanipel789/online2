@@ -5,6 +5,7 @@
 </button></h3>
 
 
+
 <table class="table table-striped">
   <thead>
 	<tr>
@@ -25,7 +26,7 @@
 			{{ device.name }}
 		</button>
     </td>
-	<td class="col-md-2"><button class="btn disabled" >{{ device.created }}</button></td>
+	<td class="col-md-2"><button class="btn disabled" am-time-ago="device.created"></button></td>
 	<td  class="col-md-6 text-right">
       <button class="btn" ng-click="editDevice(device.id)">
         <span class="glyphicon glyphicon-pencil"></span>
