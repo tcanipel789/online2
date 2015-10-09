@@ -11,7 +11,7 @@ app.set('port', (process.env.PORT || 5000));
 app.use(bodyParser.json()); // for parsing application/json
 app.use(express.static('public'));
 
-var connectionString = process.env.HEROKU_POSTGRESQL_COPPER_URL || 'postgres://csvpsujaljamxy:gcjhDnpk7mFfLVhz7KbP0Qhy5w@ec2-50-19-208-138.compute-1.amazonaws.com:5432/d6dss85etufrmo?ssl=true';
+var connectionString = process.env.HEROKU_POSTGRESQL_COPPER_URL || 'postgres://fhaffwscrcrbqk:szPm6qahfBVt9caoCT9LspKavB@ec2-54-197-241-24.compute-1.amazonaws.com:5432/d59390etfcghc7?ssl=true';
 //update the media list and store it in the database
 var connectionProperties = {host: "online.royalwebhosting.net",user: "1942016",password: "hellmaster"};
 var ftpresult = [];

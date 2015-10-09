@@ -1,13 +1,13 @@
-var http = require("https");
+﻿var http = require("http");
 var querystring = require('querystring');
 var fs = require("fs");
 var path = require('path');
 var exec = require('child_process').exec;
 
 
-var server = "https://calm-hollows-9500.herokuapp.com";  // SERVER URL
-var serverPortSSL = '443';
-var serverIp   = 'calm-hollows-9500.herokuapp.com';
+var server = "http://arcane-oasis-9800.herokuapp.com";  // SERVER URL
+//var serverPortSSL = '443';
+var serverIp   = 'arcane-oasis-9800.herokuapp.com';
 var download = true;
 var playlistsPath = "/playlist/"; // "./playlist/" // PLAYLIST FOLDER ON DEVICE
 var mediasPath = "/medias/";    // "/medias/"   // MEDIAS FOLDER ON DEVICE
@@ -203,7 +203,7 @@ function httpPost(codestring, path) {
 	// An object of options to indicate where to post to
 	var post_options = {
 	  host: serverIp,
-	  port: serverPortSSL,
+	  //port: serverPortSSL,
 	  path: path,
 	  method: 'POST',
 	  headers: {
@@ -222,8 +222,8 @@ function httpPost(codestring, path) {
 	post_req.end();
 }
 
-setInterval(deviceInformation, 60000);
-setInterval(downloadManager, 10000);
-setInterval(updatePlaylist, 10000);
+setInterval(deviceInformation, 10000);
+//setInterval(downloadManager, 10000);
+//setInterval(updatePlaylist, 10000);
 
 
