@@ -103,6 +103,9 @@ static int video_decode_test()
       return -2;
 
    i += 1;
+   
+   
+   
    if((client = ilclient_init()) == NULL)
    {
       fclose(in);
@@ -207,9 +210,15 @@ static int video_decode_test()
          if(!data_len){
 			fclose(in);
 		
+			if (i == sizeOfPlaylist) {
+				// loop
+				i = 0;
+			}
+			
 			while((in = fopen(playlist[i], "rb")) == NULL){
 				i+=1;
 			}
+			
 			
 			printf("Adding to the buffer:  %s \n", playlist[i]);
 			
@@ -283,3 +292,4 @@ int main (int argc, char **argv)
    bcm_host_init();
    return video_decode_test();
 }
+
