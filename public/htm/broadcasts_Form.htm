@@ -17,12 +17,12 @@
   <label class="col-sm-2 control-label" ng-click="showDateFrom()">From :</label>
   <div class="col-sm-4">
     <button class="btn  btn-block" ng-click="showDateFrom()">{{ $parent.datefrom | date:'yyyy-MM-dd HH:mm' }}</button>
-	<datetimepicker  ng-show="fromvisible" data-ng-model="$parent.datefrom" ></datetimepicker>
+	<datetimepicker  ng-show="fromvisible" data-ng-model="$parent.datefrom" data-on-set-time="showDateFrom()" ></datetimepicker>
    </div>
   <label class="col-sm-2 control-label" ng-click="showDateTo()">To :</label>
   <div class="col-sm-4">
     <button class="btn  btn-block" ng-click="showDateTo()">{{ $parent.dateto | date:'yyyy-MM-dd HH:mm' }}</button>
-	<datetimepicker  ng-show="tovisible" data-ng-model="$parent.dateto" ></datetimepicker>
+	<datetimepicker  ng-show="tovisible" data-ng-model="$parent.dateto" data-on-set-time="showDateTo()"></datetimepicker>
   </div>
 </div>
 
