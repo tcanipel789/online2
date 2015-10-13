@@ -9,9 +9,28 @@ $scope.stylereload = "glyphicon glyphicon-refresh";
 $scope.styleremove = "glyphicon glyphicon-remove";
 $scope.isTansferVisible = true;
 $scope.isTansferVisibleMedia = true;
+$scope.fromvisible=false;
+$scope.tovisible=false;
 
 $scope.tags='';
 $scope.medias='';
+
+
+$scope.showDateTo = function(){
+	if ($scope.tovisible){
+		$scope.tovisible = false;
+	}else{
+		$scope.tovisible = true;
+	}
+}
+
+$scope.showDateFrom = function(){
+	if ($scope.fromvisible){
+		$scope.fromvisible = false;
+	}else{
+		$scope.fromvisible = true;
+	}
+}
 
 $scope.showTag = function(){
 	if ($scope.tagVisible){
