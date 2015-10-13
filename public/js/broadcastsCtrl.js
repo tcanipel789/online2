@@ -104,7 +104,11 @@ $scope.reload = function() {
 	}
 }
 
-
+$scope.activateBroadcast= function(id,value){
+	$scope.id = id;
+	$scope.broadcasted = !value;
+	$scope.save();
+}
 
 $scope.editBroadcast = function(id) {
 	$scope.listVisible = false;
@@ -126,10 +130,10 @@ $scope.editBroadcast = function(id) {
 	$scope.datefrom = $scope.broadcasts[index].datefrom;
 	$scope.dateto = $scope.broadcasts[index].dateto;
 	$scope.created = $scope.broadcasts[index].created;
+	$scope.broadcasted = $scope.broadcasts[index].broadcasted;
 	$scope.id = id;
 	$scope.tags=[];
 	$scope.medias=[];
-	
 	
 	$scope.getTags();
 	$scope.getMedias();
@@ -155,13 +159,16 @@ $scope.addBroadcast = function(){
 	$scope.owner= '';
 	$scope.tags= '';
 	$scope.medias= '';
+	$scope.broadcasted= false;
 };
 
 
 $scope.save = function() {
 	
 	// SEND THE NEW CONTENT TO THE SERVER
-	var data = {string: {id: $scope.id , name : $scope.name, datefrom: $scope.datefrom, dateto:$scope.dateto , owner: $scope.owner, tags: $scope.tags, medias: $scope.medias}};
+	
+	var data = {string: {id: $scope.id , name : $scope.name, datefrom: $scope.datefrom, dateto:$scope.dateto , owner: $scope.owner, tags: $scope.tags, medias: $scope.medias, broadcasted : $scope.broadcasted}};
+	
 	$scope.styleSave="glyphicon glyphicon-transfer";
 	$http.post('/online/broadcasts/brd', data).
 	  then(function(response) {

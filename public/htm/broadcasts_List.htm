@@ -29,6 +29,9 @@
 	<td><button class="btn disabled" >{{ broadcast.datefrom | date:'yyyy-MM-dd HH:mm' }}</button></td>
 	<td><button class="btn disabled" >{{ broadcast.dateto | date:'yyyy-MM-dd HH:mm' }}</button></td>
 	<td  class="col-md-6 text-right">
+	  <button class="btn" ng-click="activateBroadcast(broadcast.id, broadcast.broadcasted )">
+        <span ng-class=" {{broadcast.broadcasted}} ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked'"></span>
+      </button>
 	  <button class="btn" ng-click="removeBroadcast(broadcast.id)">
         <span ng-class="styleremove" ></span>
       </button>

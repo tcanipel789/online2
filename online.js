@@ -291,16 +291,17 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 	var owner = data.string.owner || null;
 	var medias = data.string.medias || null;
 	var id = data.string.id || null;
+	var broadcasted = data.string.broadcasted;
 	
 	
-	console.log('POST> the broadcast : '+req.params.ID+ ' is sending information| ');
+	console.log('POST> the broadcast : '+broadcasted+ ' is sending information| ');
 	
 	
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
 			console.log("> Trying to updating an existing broadcast "+ name);
-		    client.query("UPDATE broadcasts SET name=coalesce(($1),name), datefrom=coalesce(($2),datefrom), dateto =coalesce(($3),dateto),owner =coalesce(($4),owner) WHERE id=($5)", [name,datefrom,dateto,owner,id], function(err, result) {
+		    client.query("UPDATE broadcasts SET name=coalesce(($1),name), datefrom=coalesce(($2),datefrom), dateto =coalesce(($3),dateto),owner =coalesce(($4),owner), broadcasted=coalesce(($5),broadcasted) WHERE id=($6)", [name,datefrom,dateto,owner,broadcasted,id], function(err, result) {
 			// UPDATE ALL DEPENDANCIES TO TAGS
 			if (tags != null){
 				for (var i = 0; i < tags.length ; i++){
@@ -334,7 +335,7 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 			if (result.rowCount !=  0) console.log("sending finished");
 			if (result.rowCount ==  0){
 				  console.log("> Insert a new broadcast");
-				  client.query("INSERT INTO broadcasts(name,datefrom,dateto,owner,created) values($1,$2,$3,$4,$5)", [name,datefrom,dateto,owner,date], function(err, result) {
+				  client.query("INSERT INTO broadcasts(name,datefrom,dateto,owner,created,broadcasted) values($1,$2,$3,$4,$5,$6)", [name,datefrom,dateto,owner,date,broadcasted], function(err, result) {
 					  
 				 
 				  // INSERT ALL THE DEPENDENCIES TO MEDIAS
