@@ -438,24 +438,26 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 app.get("/online/broadcasts/:PLAYER",function(req,res){
 	console.log("GET >  checking if a new playlist is available for "+req.params.PLAYER);
 
-	url = "/online/broadcasts/dl"+req.params.PLAYER+"/1234";
 	
 	// Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
-		client.query("SELECT id_broadcast FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE devices.name=($1)",[req.params.PLAYER], function(err, result) {
+			
+		client.query("SELECT MAX(id_broadcast) FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND broadcast_devices.updated = false AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[req.params.PLAYER], function(err, result) {
 			//call `done()` to release the client back to the pool
 			done();
 			if(err) {
-			  return console.error('> Error running broadcasts update', err);
+			  return console.error('> Error running selection of available broadcast', err);
+			  res.sendStatus(500);
 			}
 			
-			return res.json(result.rows);
+			res.send("/online/broadcasts/dl/"+req.params.PLAYER+"/"+result.rows[0].max);
+			res.sendStatus(200);
 		});
 			
     }});
 	
-	res.send(url);
+	
 });
 
 app.get("/online/broadcasts/dl/:PLAYER/:PLAYLIST",function(req,res){
