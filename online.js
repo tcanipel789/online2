@@ -331,6 +331,7 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 			if (tags != null){
 				console.log("> SQL Trying to updating the broadcast devices list ");
 				// Clear the list for this  broadcast
+				
 				client.query("DELETE FROM broadcast_devices WHERE (id_broadcast=($1))",[id], function(err, result) {
 				done();
 				if(err) {
@@ -345,6 +346,7 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 						}
 					}
 					inclause=inclause.slice(0, -1);
+					
 					//Get the distinct devices id that match the group of tags and insert them
 					var command ="INSERT INTO broadcast_devices (id_broadcast,updated,id_device) SELECT DISTINCT CAST( "+id+" as INT),false,devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id IN ("+inclause+"))";
 					client.query(command, function(err, result) {
@@ -441,7 +443,7 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 	// Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
-		client.query("SELECT * FROM broadcasts ORDER BY id ASC;", function(err, result) {
+		client.query("SELECT id_broadcast FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE devices.name=($1)",[req.params.PLAYER], function(err, result) {
 			//call `done()` to release the client back to the pool
 			done();
 			if(err) {
