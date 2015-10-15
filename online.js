@@ -294,7 +294,7 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 	var broadcasted = data.string.broadcasted;
 	
 	
-	console.log('POST> the broadcast : '+id+' / '+ name ' is sending information| ');
+	console.log('POST> the broadcast : '+id+' / '+ name +' is sending information| ');
 	
 	
     // Get a Postgres client from the connection pool
