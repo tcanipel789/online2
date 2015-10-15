@@ -294,7 +294,7 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 	var broadcasted = data.string.broadcasted;
 	
 	
-	console.log('POST> the broadcast : '+broadcasted+ ' is sending information| ');
+	console.log('POST> the broadcast : '+id+' / '+ name ' is sending information| ');
 	
 	
     // Get a Postgres client from the connection pool
@@ -305,7 +305,7 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 			// UPDATE ALL DEPENDANCIES TO TAGS
 			if (tags != null){
 				for (var i = 0; i < tags.length ; i++){
-					console.log("UPDATING : " + tags[i].selected + " "+tags[i].id_tag);
+					//console.log("UPDATING : " + tags[i].selected + " "+tags[i].id_tag);
 					client.query("UPDATE broadcast_tag SET selected=($1) WHERE (id_broadcast=($2) AND id_tag=($3))", [tags[i].selected,id,tags[i].id_tag], function(err, result) {
 					done();
 					if(err) {
@@ -317,7 +317,7 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 			// UPDATE ALL DEPENDANCIES TO MEDIAS
 			if (medias != null){
 				for (var i = 0; i < medias.length ; i++){
-					console.log("UPDATING : " + medias[i].selected + " "+medias[i].id_media);
+					//console.log("UPDATING : " + medias[i].selected + " "+medias[i].id_media);
 					client.query("UPDATE broadcast_media SET selected=($1) WHERE (id_broadcast=($2) AND id_media=($3))", [medias[i].selected,id,medias[i].id_media], function(err, result) {
 					done();
 					if(err) {
@@ -329,29 +329,29 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 			
 			// UPDATE ALL DEPENDANCIES TO DEVICES
 			if (tags != null){
+				console.log("> SQL Trying to updating the broadcast devices list ");
 				// Clear the list for this  broadcast
-				client.query("DELETE FROM broadcast_devices WHERE (id_broadcast=($1))", [id], function(err, result) {
+				client.query("DELETE FROM broadcast_devices WHERE (id_broadcast=($1))",[id], function(err, result) {
 				done();
 				if(err) {
 				  return console.error('> Error running update', err);
 				}else{
+					console.log("> SQL  inserting devices list ");
 					// Generate the IN clause string
 					var inclause = "";	
 					for (var i = 0; i < tags.length ; i++){
-						inclause += tags[i].id_tag;
-						if( i != tags.length){
-							inclause += ",";
+						if (tags[i].selected){
+							inclause += tags[i].id_tag+",";
 						}
 					}
+					inclause=inclause.slice(0, -1);
 					//Get the distinct devices id that match the group of tags and insert them
-					client.query("INSERT INTO broadcast_devices (id_broadcast,updated,id_device) SELECT DISTINCT ($1),($2),devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id IN ($3))",[id,false,inclause], function(err, result) {
+					client.query("INSERT INTO broadcast_devices (id_broadcast,updated,id_device) SELECT DISTINCT CAST( $1 as INT),false,devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id IN ($2))",[id,inclause], function(err, result) {
 					done();
 					if(err) {
 					  return console.error('> Error running update', err);
 					}
-					return res.json(result.rows);
-				});
-				
+					});
 				}
 			  });
 			}
@@ -363,7 +363,6 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 			  return console.error('> Error running update', err);
 			}
 			if (result.rowCount !=  0)res.sendStatus(200);
-			if (result.rowCount !=  0) console.log("sending finished");
 			if (result.rowCount ==  0){
 				  console.log("> Insert a new broadcast");
 				  client.query("INSERT INTO broadcasts(name,datefrom,dateto,owner,created,broadcasted) values($1,$2,$3,$4,$5,$6)", [name,datefrom,dateto,owner,date,broadcasted], function(err, result) {

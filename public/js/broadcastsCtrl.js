@@ -106,6 +106,8 @@ $scope.reload = function() {
 
 $scope.activateBroadcast= function(id,value){
 	$scope.id = id;
+	$scope.tags = null;
+	$scope.medias = null;
 	$scope.broadcasted = !value;
 	$scope.save();
 }
@@ -130,7 +132,7 @@ $scope.editBroadcast = function(id) {
 	$scope.datefrom = $scope.broadcasts[index].datefrom;
 	$scope.dateto = $scope.broadcasts[index].dateto;
 	$scope.created = $scope.broadcasts[index].created;
-	$scope.broadcasted = $scope.broadcasts[index].broadcasted;
+	$scope.broadcasted = false;//$scope.broadcasts[index].broadcasted;
 	$scope.id = id;
 	$scope.tags=[];
 	$scope.medias=[];
