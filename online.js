@@ -338,7 +338,7 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 				}else{
 					console.log("> SQL  inserting devices list ");
 					// Generate the IN clause string
-					var inclause = "";	
+					var inclause="";	
 					for (var i = 0; i < tags.length ; i++){
 						if (tags[i].selected){
 							inclause += tags[i].id_tag+",";
@@ -346,7 +346,8 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 					}
 					inclause=inclause.slice(0, -1);
 					//Get the distinct devices id that match the group of tags and insert them
-					client.query("INSERT INTO broadcast_devices (id_broadcast,updated,id_device) SELECT DISTINCT CAST( $1 as INT),false,devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id IN ($2))",[id,inclause], function(err, result) {
+					var command ="INSERT INTO broadcast_devices (id_broadcast,updated,id_device) SELECT DISTINCT CAST( "+id+" as INT),false,devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id IN ("+inclause+"))";
+					client.query(command, function(err, result) {
 					done();
 					if(err) {
 					  return console.error('> Error running update', err);
