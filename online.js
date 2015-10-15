@@ -294,14 +294,14 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 	var broadcasted = data.string.broadcasted;
 	
 	
-	console.log('POST> the broadcast : '+id+' / '+ name +' is sending information| ');
+	console.log('POST> the broadcast : '+broadcasted+id+' / '+ name +' is sending information| ');
 	
 	
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
 			console.log("> Trying to updating an existing broadcast "+ name);
-		    client.query("UPDATE broadcasts SET name=coalesce(($1),name), datefrom=coalesce(($2),datefrom), dateto =coalesce(($3),dateto),owner =coalesce(($4),owner), broadcasted=coalesce(($5),broadcasted) WHERE id=($6)", [name,datefrom,dateto,owner,broadcasted,id], function(err, result) {
+		    client.query("UPDATE broadcasts SET name=coalesce(($1),name), datefrom=coalesce(($2),datefrom), dateto =coalesce(($3),dateto),owner =coalesce(($4),owner), broadcasted=($5) WHERE id=($6)", [name,datefrom,dateto,owner,broadcasted,id], function(err, result) {
 			// UPDATE ALL DEPENDANCIES TO TAGS
 			if (tags != null){
 				for (var i = 0; i < tags.length ; i++){
