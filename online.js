@@ -438,6 +438,20 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 
 	url = "/online/broadcasts/dl"+req.params.PLAYER+"/1234";
 	
+	// Get a Postgres client from the connection pool
+    pg.connect(connectionString, function(err, client, done) {
+		if (client != null){
+		client.query("SELECT * FROM broadcasts ORDER BY id ASC;", function(err, result) {
+			//call `done()` to release the client back to the pool
+			done();
+			if(err) {
+			  return console.error('> Error running broadcasts update', err);
+			}
+			
+			return res.json(result.rows);
+		});
+			
+    }});
 	
 	res.send(url);
 });
