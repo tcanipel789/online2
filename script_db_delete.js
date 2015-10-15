@@ -35,3 +35,8 @@ var client8 = new pg.Client(connectionString);
 client8.connect();
 var query = client8.query('DELETE FROM broadcast_media');
 query.on('end', function() { client8.end(); });
+
+var client9 = new pg.Client(connectionString);
+client9.connect();
+var query = client9.query('DELETE FROM broadcast_devices');
+query.on('end', function() { client9.end(); });

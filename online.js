@@ -326,6 +326,37 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 				  });
 				}
 			}
+			
+			// UPDATE ALL DEPENDANCIES TO DEVICES
+			if (tags != null){
+				// Clear the list for this  broadcast
+				client.query("DELETE FROM broadcast_devices WHERE (id_broadcast=($1))", [id], function(err, result) {
+				done();
+				if(err) {
+				  return console.error('> Error running update', err);
+				}else{
+					// Generate the IN clause string
+					var inclause = "";	
+					for (var i = 0; i < tags.length ; i++){
+						inclause += tags[i].id_tag;
+						if( i != tags.length){
+							inclause += ",";
+						}
+					}
+					//Get the distinct devices id that match the group of tags and insert them
+					client.query("INSERT INTO broadcast_devices (id_broadcast,updated,id_device) SELECT DISTINCT ($1),($2),devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id IN ($3))",[id,false,inclause], function(err, result) {
+					done();
+					if(err) {
+					  return console.error('> Error running update', err);
+					}
+					return res.json(result.rows);
+				});
+				
+				}
+			  });
+			}
+			
+			
 			//call `done()` to release the client back to the pool
 			done();
 			if(err) {
@@ -383,7 +414,8 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 								}
 							}
 						}
-					});	
+					});				 
+					 
 					 
 					//call `done()` to release the client back to the pool
 					done();
@@ -403,15 +435,10 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 
 app.get("/online/broadcasts/:PLAYER",function(req,res){
 	console.log("GET >  checking if a new playlist is available for "+req.params.PLAYER);
-	/*
-	//TODO THINGS WITH SERVER DATA AND RETURN THE URL TO GET THE NEW PLAYLIST AND MARK THE PLAYER AS UPDATED
-	*/
-	//MOCK
-	var url = null;
-	if (mock == 0){
-		url = "/online/broadcasts/dl"+req.params.PLAYER+"/1234";
-		mock = 1;
-	}
+
+	url = "/online/broadcasts/dl"+req.params.PLAYER+"/1234";
+	
+	
 	res.send(url);
 });
 

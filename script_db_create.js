@@ -43,3 +43,8 @@ var client8 = new pg.Client(connectionString);
 client8.connect();
 var query = client8.query('CREATE TABLE broadcast_media (id SERIAL PRIMARY KEY, id_broadcast INT not null, id_media INT not null, selected BOOLEAN)');
 query.on('end', function() { client8.end(); });
+
+var client9 = new pg.Client(connectionString);
+client9.connect();
+var query = client9.query('CREATE TABLE broadcast_devices (id SERIAL PRIMARY KEY, id_broadcast INT not null, id_device INT not null, updated BOOLEAN)');
+query.on('end', function() { client9.end(); });
