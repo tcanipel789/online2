@@ -476,7 +476,7 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 	// Build the core playlist for the concerned device
 	pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
-			console.log("> Retrieve broadcast ID that are eligible to display"+name );
+			console.log("> Retrieve broadcast ID that are eligible to display "+name );
 			client.query("SELECT id_broadcast FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND broadcast_devices.updated = false AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
 			done();
 			if(err) {
@@ -498,11 +498,12 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 				if(err) {
 				  return console.error('> Error getting the main playlist', err);
 				}else{
-					command = "UPDATE broadcast_devices SET updated=true WHERE id IN ("+inclause+")";
+					console.log("on update le broadcast status"+inclause)
+					command = "UPDATE broadcast_devices SET updated=true WHERE id_broadcast IN ("+inclause+")";
 					client.query(command, function(err, result) {
 					done();
 					if(err) {
-					return console.error('> Error updating the broadcasted status update', err);
+						return console.error('> Error updating the broadcasted status update', err);
 					}
 					});
 					res.send(resultBroadcast.rows);
