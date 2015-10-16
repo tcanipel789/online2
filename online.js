@@ -361,9 +361,9 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 			
 			// UPDATE ALL DEPENDANCIES TO DEVICES
 			if (tags != null){
-				console.log("> SQL Trying to updating the broadcast devices list ");
-				// Clear the list for this  broadcast
+				console.log("> SQL Trying to updating the broadcast devices list ");	
 				
+				// Clear the list for this  broadcast
 				client.query("DELETE FROM broadcast_devices WHERE (id_broadcast=($1))",[id], function(err, result) {
 				done();
 				if(err) {
@@ -379,14 +379,26 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 					}
 					inclause=inclause.slice(0, -1);
 					
-					//Get the distinct devices id that match the group of tags and insert them
-					var command ="INSERT INTO broadcast_devices (id_broadcast,updated,id_device) SELECT DISTINCT CAST( "+id+" as INT),false,devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id IN ("+inclause+"))";
-					client.query(command, function(err, result) {
+					
+					// Identify the devices impacted, and reset their status
+					var commandUpdate = "UPDATE broadcast_devices SET updated=false WHERE id_device IN (SELECT devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id IN (1,2)))";
+					client.query(commandUpdate, function(err, result) {
 					done();
-					if(err) {
-					  return console.error('> Error running update', err);
-					}
+						if(err) {
+							return console.error('> Error running update', err);
+						}else{
+							//Get the distinct devices id that match the group of tags and insert them
+							var command ="INSERT INTO broadcast_devices (id_broadcast,updated,id_device) SELECT DISTINCT CAST( "+id+" as INT),false,devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id IN ("+inclause+"))";
+							client.query(command, function(err, result) {
+							done();
+							if(err) {
+							  return console.error('> Error running update', err);
+							}
+							});
+						}
 					});
+					
+					
 				}
 			  });
 			}
@@ -477,12 +489,12 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 	pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
 			console.log("> Retrieve broadcast ID that are eligible to display "+name );
-			client.query("SELECT id_broadcast FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
+			client.query("SELECT id_broadcast,updated FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND broadcast_devices.updated = false AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
 			done();
 			if(err) {
 			  return console.error('> Error getting the main playlist', err);
 			}else{
-				if (result.rows.length == 0) return res.sendStatus(404);;
+				if (result.rows.length == 0) return res.sendStatus(404);
 				// Generate a playlist and send it to the player
 				// Generate the IN clause string
 				var inclause="";	
@@ -492,12 +504,15 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 				inclause=inclause.slice(0, -1);
 				console.log("> Retrieving the package of playlist : "+inclause);
 				var command = "SELECT * FROM broadcasts WHERE id IN ("+inclause+")";
+				
 				client.query(command, function(err, resultBroadcast) {
 				//call `done()` to release the client back to the pool
 				done();
 				if(err) {
 				  return console.error('> Error getting the main playlist', err);
 				}else{
+					res.send(resultBroadcast.rows);
+					
 					command = "UPDATE broadcast_devices SET updated=true WHERE id_broadcast IN ("+inclause+")";
 					client.query(command, function(err, result) {
 					done();
@@ -505,7 +520,7 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 						return console.error('> Error updating the broadcasted status update', err);
 					}
 					});
-					res.send(resultBroadcast.rows);
+					
 				}
 				});
 			}

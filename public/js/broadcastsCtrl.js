@@ -113,7 +113,16 @@ $scope.activateBroadcast= function(id,value){
 	$scope.tags = null;
 	$scope.medias = null;
 	$scope.broadcasted = !value;
-	$scope.save();
+	
+	$http.get('/online/broadcasts/'+$scope.id+'/tags').
+	  success(function(data, status, headers, config) {
+		$scope.tags = data;
+		$scope.save();
+	  }).
+	  error(function(data, status, headers, config) {
+	   console.log("error when retrieving selected tags");
+	   $scope.broadcasted = !value;
+	  });
 }
 
 $scope.editBroadcast = function(id) {
