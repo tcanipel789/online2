@@ -482,7 +482,7 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 			if(err) {
 			  return console.error('> Error getting the main playlist', err);
 			}else{
-				if (result.rows.length == 0) return res.status(404);
+				if (result.rows.length == 0) return res.sendStatus(404);;
 				// Generate a playlist and send it to the player
 				// Generate the IN clause string
 				var inclause="";	
@@ -490,7 +490,7 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 					inclause += result.rows[i].id_broadcast+",";
 				}
 				inclause=inclause.slice(0, -1);
-				console.log("retrieving the package of playlist : "+inclause);
+				console.log("> Retrieving the package of playlist : "+inclause);
 				var command = "SELECT * FROM broadcasts WHERE id IN ("+inclause+")";
 				client.query(command, function(err, resultBroadcast) {
 				//call `done()` to release the client back to the pool
@@ -498,7 +498,6 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 				if(err) {
 				  return console.error('> Error getting the main playlist', err);
 				}else{
-					console.log("on update le broadcast status"+inclause)
 					command = "UPDATE broadcast_devices SET updated=true WHERE id_broadcast IN ("+inclause+")";
 					client.query(command, function(err, result) {
 					done();
