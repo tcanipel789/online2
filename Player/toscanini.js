@@ -24,7 +24,9 @@ var refresh = "/online/broadcasts/"+_mac; // URL WITH PLAYER NAME
 var updatePlaylist = function(){
   http.get(server+"/online/broadcasts/"+_mac, function(res) {
 	  res.on("data",function (data){
-			console.log("=> New main playlist available");
+			
+			if (res.statusCode != 404){
+				console.log("=> New main playlist available");
 			var playlistObj = JSON.parse(data);	
 			var playlistName = shortid.generate();
 			
@@ -35,6 +37,9 @@ var updatePlaylist = function(){
 				console.log("=> Playlist saved ");
 			  }
 			});
+			}else{
+				console.log("=> No new main playlist available");
+			}
 		})
 	}).on('error', function(e) {
 	  console.log("=> Error when fetching the broadcast request : " + e.message);
@@ -199,7 +204,7 @@ function httpPost(codestring, path) {
 	};
 	// Set up the request
 	var post_req = http.request(post_options, function(res) {
-		 console.log('>HTTP STATUS: ' + res.statusCode);
+		 //console.log('>HTTP STATUS: ' + res.statusCode);
 	});
 	post_req.on('error', function(e) {
 		console.error("=> Error when posting device information on the server : " + e);
