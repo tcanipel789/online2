@@ -381,7 +381,7 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 					
 					
 					// Identify the devices impacted, and reset their status
-					var commandUpdate = "UPDATE broadcast_devices SET updated=false WHERE id_device IN (SELECT devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id IN (1,2)))";
+					var commandUpdate = "UPDATE broadcast_devices SET updated=false WHERE id_device IN (SELECT devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id IN ("+inclause+")))";
 					client.query(commandUpdate, function(err, result) {
 					done();
 						if(err) {
