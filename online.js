@@ -482,6 +482,7 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 			if(err) {
 			  return console.error('> Error getting the main playlist', err);
 			}else{
+				if (result.rows.length == 0) return res.status(404);
 				// Generate a playlist and send it to the player
 				// Generate the IN clause string
 				var inclause="";	

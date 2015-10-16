@@ -3,6 +3,7 @@ var querystring = require('querystring');
 var fs = require("fs");
 var path = require('path');
 var exec = require('child_process').exec;
+var shortid = require('shortid');
 
 
 var server = "http://arcane-oasis-9800.herokuapp.com";  // SERVER URL
@@ -21,10 +22,19 @@ var refresh = "/online/broadcasts/"+_mac; // URL WITH PLAYER NAME
 / Functions to fetch every 10s if a new playlist is available
 */
 var updatePlaylist = function(){
-  http.get(server+refresh, function(res) {
+  http.get(server+"/online/broadcasts/"+_mac, function(res) {
 	  res.on("data",function (data){
-			console.log("=> New playlist available on : " + data.toString());
-			downloadPlaylist(data.toString());
+			console.log("=> New main playlist available");
+			var playlistObj = JSON.parse(data);	
+			var playlistName = shortid.generate();
+			
+			fs.writeFile(playlistsPath+playlistName+".pl", JSON.stringify(playlistObj), function (err) {
+			  if (err){
+				console.log("=> Error : Playlist not saved "+err);
+			  }else{
+				console.log("=> Playlist saved ");
+			  }
+			});
 		})
 	}).on('error', function(e) {
 	  console.log("=> Error when fetching the broadcast request : " + e.message);
@@ -35,35 +45,12 @@ var updatePlaylist = function(){
 */
 
 /*
-/ Functions to download the playlist
-*/
-var downloadPlaylist = function(url){
-	 http.get(server+url, function(res) {
-	  res.on("data",function (data){
-			console.log("=> Playlist downloaded ");
-			var playlistObj = JSON.parse (data);	
-			var name = playlistObj.name;
-			fs.writeFile(playlistsPath+name+".pl", JSON.stringify(playlistObj), function (err) {
-			  if (err){
-				console.log("=> Error : Playlist not saved "+err);
-			  }else{
-				console.log("=> Playlist saved ");
-			  }
-			});
-		})
-	}).on('error', function(e) {
-	  console.log("Error: " + e.message);
-	});
-}
-
-
-/*
 / Media manager FTP
 */
 /* check if for a playlist a media is missing, if so, then launch the download
 /  - One download at a time
 */
-
+/*
 var downloadManager = function (){
 	
 	if (download == true){ // the download manager is launched only if nothing is being downloaded
@@ -80,7 +67,7 @@ var downloadManager = function (){
 		});	
 	}
 };
-
+*/
 var checkPlaylists = function(files){
 	// Launch the download of the first missing media
 	files.forEach(function(file) {
