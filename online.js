@@ -60,6 +60,9 @@ function UpdateFtpMedias(){
 	c.connect(connectionProperties);	
 };
 
+/*
+GET FUNCTION : send back the information of all players registered online
+*/
 app.get("/online/devices",function(req,res){
 	console.log("GET > retrieving devices");
 	
@@ -81,6 +84,9 @@ app.get("/online/devices",function(req,res){
 	
 });
 
+/*
+GET FUNCTION : send all the tags registered online
+*/
 app.get("/online/tags",function(req,res){
 	console.log('GET> retrieving the tags');
 	var results = [];
@@ -99,6 +105,11 @@ app.get("/online/tags",function(req,res){
     }});
 });
 
+
+/*
+GET FUNCTION : send all the type of media supported by the platform
+TO DO : send only the one supported by the device 
+*/
 app.get("/online/medias/types",function(req,res){
 	console.log('GET> retrieving media types');
 	var results = [];
@@ -117,6 +128,9 @@ app.get("/online/medias/types",function(req,res){
     }});
 });
 
+/*
+GET FUNCTION : send all the medias availables online
+*/
 app.get("/online/medias",function(req,res){
 	console.log("GET > retrieving medias");
 	
@@ -139,6 +153,9 @@ app.get("/online/medias",function(req,res){
 	
 });
 
+/*
+POST FUNCTION : remove the medias from the list
+*/
 app.post("/online/medias/r/",function(req,res){
 	var data = req.body;
 	var id = data.string.id || null;
@@ -162,6 +179,9 @@ app.post("/online/medias/r/",function(req,res){
 	}
 });
 
+/*
+POST FUNCTION : UPDATE / CREATE an media
+*/
 app.post('/online/medias/:ID', function(req, res) {
 	var data = req.body;
 	
@@ -236,6 +256,9 @@ app.post('/online/medias/:ID', function(req, res) {
     }});
 });
 
+/*
+GET FUNCTION : send all broadcasts availables
+*/
 app.get("/online/broadcasts",function(req,res){
 	//TODO broadcast storage
 	console.log("GET > retrieving broadcasts");
@@ -257,24 +280,33 @@ app.get("/online/broadcasts",function(req,res){
     }});
 });
 
+/*
+POST FUNCTION : REMOVE a broadcast an dependencies to devices from the list
+*/
 app.post("/online/broadcasts/r/",function(req,res){
 	var data = req.body;
 	var id = data.string.id || null;
 	
 	if( id != null){
-		
 		pg.connect(connectionString, function(err, client, done) {
 			if (client != null){
 				console.log("> Remove broadcast "+ id);
-				client.query("DELETE FROM broadcasts WHERE id=($1)", [id], function(err, result){
-				done();
+					client.query("DELETE FROM broadcasts WHERE id=($1)", [id], function(err, result){
+					done();
 					if(err) {
 					  return console.error('> Error running media delete', err);
-					}
-				res.sendStatus(200);
-				});
-			}
-		});
+					}else{
+						client.query("DELETE FROM broadcast_devices WHERE (id_broadcast=($1))",[id], function(err, result) {
+						done();
+						if(err) {
+						  return console.error('> Error running media delete', err);
+						}
+						res.sendStatus(200);
+						});
+						}
+					});
+				}
+			});
 	}else{
 		res.sendStatus(500);
 	}
@@ -436,36 +468,52 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 });
 
 app.get("/online/broadcasts/:PLAYER",function(req,res){
-	console.log("GET >  checking if a new playlist is available for "+req.params.PLAYER);
+	console.log("GET >  checking if a new main playlist is available for "+req.params.PLAYER);
 
+	var name = req.params.PLAYER;
 	
-	// Get a Postgres client from the connection pool
-    pg.connect(connectionString, function(err, client, done) {
+	if (name != ""){
+	// Build the core playlist for the concerned device
+	pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
-			
-		client.query("SELECT MAX(id_broadcast) FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND broadcast_devices.updated = false AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[req.params.PLAYER], function(err, result) {
-			//call `done()` to release the client back to the pool
+			console.log("> Retrieve broadcast ID that are eligible to display"+name );
+			client.query("SELECT id_broadcast FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND broadcast_devices.updated = false AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
 			done();
 			if(err) {
-			  return console.error('> Error running selection of available broadcast', err);
-			  res.sendStatus(500);
+			  return console.error('> Error getting the main playlist', err);
+			}else{
+				// Generate a playlist and send it to the player
+				// Generate the IN clause string
+				var inclause="";	
+				for (var i = 0; i < result.rows.length ; i++){
+					inclause += result.rows[i].id_broadcast+",";
+				}
+				inclause=inclause.slice(0, -1);
+				console.log("retrieving the package of playlist : "+inclause);
+				var command = "SELECT * FROM broadcasts WHERE id IN ("+inclause+")";
+				client.query(command, function(err, resultBroadcast) {
+				//call `done()` to release the client back to the pool
+				done();
+				if(err) {
+				  return console.error('> Error getting the main playlist', err);
+				}else{
+					command = "UPDATE broadcast_devices SET updated=true WHERE id IN ("+inclause+")";
+					client.query(command, function(err, result) {
+					done();
+					if(err) {
+					return console.error('> Error updating the broadcasted status update', err);
+					}
+					});
+					res.send(resultBroadcast.rows);
+				}
+				});
 			}
-			
-			res.send("/online/broadcasts/dl/"+req.params.PLAYER+"/"+result.rows[0].max);
-			res.sendStatus(200);
-		});
-			
-    }});
-	
-	
+			});
+		}
+	});	
+	}
 });
 
-app.get("/online/broadcasts/dl/:PLAYER/:PLAYLIST",function(req,res){
-	//TODO get the broadcast corresponding to the player
-	console.log("GET > retrieving broadcasts :"+req.params.PLAYLIST+", player : " + req.params.PLAYER);
-	var broadcastObj = {'name':'trainingroom', 'medias': [{'name': 'sw7.h264', 'link': 'sw7.h264'},{'name': 'carlipa.h264', 'link': 'carlipa.h264'}]};
-	res.send(broadcastObj);
-});
 
 app.get("/online/broadcasts/:ID/tags",function(req,res){
 	console.log('GET> the broadcast : '+ req.params.ID + ' is requesting tags');
