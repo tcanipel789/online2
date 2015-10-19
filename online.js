@@ -512,13 +512,17 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 				if(err) {
 				  return console.error('> Error getting the main playlist', err);
 				}else{
-					var jsonObj = JSON.parse(resultBroadcast.rows);
 					var myJson = {'name':'value'};
-					for(var name in jsonObj) {
-					   console.log("name:"+name+", value:"+jsonObj[name]);
-					   myJson[name] = jsonObj[name];
+
+					for(var i=0; i < resultBroadcast.rows.length ; i++){
+						var id = resultBroadcast.rows[i].id;
+						for(var j=0; j < resultBroadcast.rows.length ; j++){
+							if (resultBroadcast.rows[j].id == id) console.log(" : "+resultBroadcast.rows[j].ftplink);
+						}
 					}
-					res.send(result.rows);
+						
+					
+					res.send(resultBroadcast.rows);
 					
 					command = "UPDATE broadcast_devices SET updated=true WHERE id_broadcast IN ("+inclause+")";
 					client.query(command, function(err, result) {
