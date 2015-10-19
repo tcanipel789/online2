@@ -503,8 +503,7 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 				}
 				inclause=inclause.slice(0, -1);
 				console.log("> Retrieving the package of playlist : "+inclause);
-				var command = "SELECT * FROM broadcasts WHERE id IN ("+inclause+")";
-				
+				var command = "SELECT broadcasts.id, broadcasts.name, broadcasts.datefrom, broadcasts.dateto , medias.ftplink FROM broadcasts JOIN broadcast_media ON broadcast_media.id_broadcast = broadcasts.id JOIN medias ON medias.id = broadcast_media.id_media WHERE broadcasts.id IN ("+inclause+")";
 				client.query(command, function(err, resultBroadcast) {
 				//call `done()` to release the client back to the pool
 				done();
