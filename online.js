@@ -489,7 +489,9 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 	pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
 			console.log("> Retrieve broadcast ID that are eligible to display "+name );
-			client.query("SELECT id_broadcast,updated FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND broadcast_devices.updated = false AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
+			//client.query("SELECT id_broadcast,updated FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND broadcast_devices.updated = false AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
+			client.query("SELECT id_broadcast,updated FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
+			
 			done();
 			if(err) {
 			  return console.error('> Error getting the main playlist', err);
@@ -510,7 +512,13 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 				if(err) {
 				  return console.error('> Error getting the main playlist', err);
 				}else{
-					res.send(resultBroadcast.rows);
+					var jsonObj = JSON.parse(resultBroadcast.rows);
+					var myJson = {'name':'value'};
+					for(var name in jsonObj) {
+					   console.log("name:"+name+", value:"+jsonObj[name]);
+					   myJson[name] = jsonObj[name];
+					}
+					res.send(result.rows);
 					
 					command = "UPDATE broadcast_devices SET updated=true WHERE id_broadcast IN ("+inclause+")";
 					client.query(command, function(err, result) {
