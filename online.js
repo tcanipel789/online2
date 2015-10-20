@@ -505,7 +505,7 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 				}
 				inclause=inclause.slice(0, -1);
 				console.log("> Retrieving the package of playlist : "+inclause);
-				var command = "SELECT broadcasts.id, broadcasts.name, broadcasts.datefrom, broadcasts.dateto , medias.ftplink FROM broadcasts JOIN broadcast_media ON broadcast_media.id_broadcast = broadcasts.id JOIN medias ON medias.id = broadcast_media.id_media WHERE broadcasts.id IN ("+inclause+")";
+				var command = "SELECT broadcasts.id, broadcasts.name, broadcasts.datefrom, broadcasts.dateto , medias.ftplink FROM broadcasts JOIN broadcast_media ON broadcast_media.id_broadcast = broadcasts.id JOIN medias ON medias.id = broadcast_media.id_media WHERE broadcast_media.selected = true AND broadcasts.id  IN ("+inclause+")";
 				client.query(command, function(err, resultBroadcast) {
 				//call `done()` to release the client back to the pool
 				done();
@@ -513,12 +513,28 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 				  return console.error('> Error getting the main playlist', err);
 				}else{
 					var myJson = {'name':'value'};
-
+					// Reorganize the JSON to make it simplified
+					var temp = resultBroadcast.rows.slice();
+					var previousId=-1;
 					for(var i=0; i < resultBroadcast.rows.length ; i++){
 						var id = resultBroadcast.rows[i].id;
-						for(var j=0; j < resultBroadcast.rows.length ; j++){
-							if (resultBroadcast.rows[j].id == id) console.log(" : "+resultBroadcast.rows[j].ftplink);
+						
+						// ignore repetitive lines
+						if (previousId == id){
+							previousId = id;
+							delete resultBroadcast.rows[i]; 
+							break;
+						}else{
+							previousId = id;
 						}
+						//console.log("reading id: "+id);
+						var mediaarray=[];
+						for(var j=0; j < temp.length ; j++){
+							if (temp[j].id == id){
+								mediaarray.push(temp[j].ftplink);
+							}
+						}
+						resultBroadcast.rows[i].medias = mediaarray;
 					}
 						
 					
