@@ -489,8 +489,8 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 	pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
 			console.log("> Retrieve broadcast ID that are eligible to display "+name );
-			//client.query("SELECT id_broadcast,updated FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND broadcast_devices.updated = false AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
-			client.query("SELECT id_broadcast,updated FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
+			client.query("SELECT id_broadcast,updated FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND broadcast_devices.updated = false AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
+			//client.query("SELECT id_broadcast,updated FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
 			
 			done();
 			if(err) {
