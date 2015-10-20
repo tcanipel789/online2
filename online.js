@@ -521,7 +521,6 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 						
 						// ignore repetitive lines
 						if (previousId == id){
-							previousId = id;
 							delete resultBroadcast.rows[i]; 
 							break;
 						}else{
