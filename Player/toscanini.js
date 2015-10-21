@@ -6,12 +6,13 @@ var exec = require('child_process').exec;
 var shortid = require('shortid');
 
 
+
 var server = "http://arcane-oasis-9800.herokuapp.com";  // SERVER URL
 //var serverPortSSL = '443';
 var serverIp   = 'arcane-oasis-9800.herokuapp.com';
 var download = true;
 var playlistsPath = "/playlist/"; // "./playlist/" // PLAYLIST FOLDER ON DEVICE
-var mediasPath = "/medias/";    // "/medias/"   // MEDIAS FOLDER ON DEVICE
+var mediasPath = "/media/";    // "/medias/"   // MEDIAS FOLDER ON DEVICE
 var _temp = '-';
 var _mac  = getMac();
 var _mem = '-';
@@ -27,16 +28,35 @@ var updatePlaylist = function(){
 			
 			if (res.statusCode != 404){
 				console.log("=> New main playlist available");
-			var playlistObj = JSON.parse(data);	
-			var playlistName = shortid.generate();
-			
-			fs.writeFile(playlistsPath+playlistName+".pl", JSON.stringify(playlistObj), function (err) {
-			  if (err){
-				console.log("=> Error : Playlist not saved "+err);
-			  }else{
-				console.log("=> Playlist saved ");
-			  }
-			});
+				
+				
+				fs.readdir(playlistsPath, function(err,files){
+				if (err){
+					console.log("=> Error the playlistPath cannot be reach "+ err);
+					return;
+				}
+				files = files.filter(function(file) { if ((path.extname(file) === ".pl")&&(path.basename(file,'.pl') != "main")) return file});
+				if (files != undefined){		
+					// delete all previous playlist, it is useless now, as a new one is available
+					files.forEach(function(file) {		
+						  fs.unlinkSync(playlistsPath+file, function (err) {
+						  if (err)  console.log('=> Error :  deleting '+ file);
+						});
+					});
+				}
+					
+				var playlistObj = JSON.parse(data);	
+				var playlistName = shortid.generate();
+				
+				fs.writeFile(playlistsPath+playlistName+".pl", JSON.stringify(playlistObj), function (err) {
+					  if (err){
+						console.log("=> Error : Playlist not saved "+err);
+					  }else{
+						console.log("=> Playlist saved ");
+						switchPlaylist(); // TODO download the medias, move the location of the switch only when media are availables
+					  }
+					});
+				});	
 			}else{
 				console.log("=> No new main playlist available");
 			}
@@ -44,6 +64,50 @@ var updatePlaylist = function(){
 	}).on('error', function(e) {
 	  console.log("=> Error when fetching the broadcast request : " + e.message);
 	});
+}
+
+/*
+// function to switch the playlist with the main playlist read by the bach player
+*/
+var switchPlaylist = function (){
+	
+	fs.readdir(playlistsPath, function(err,files){
+	if (err){
+		console.log("=> Error the playlistPath cannot be reach "+ err);
+		return;
+	}
+	files = files.filter(function(file) { if ((path.extname(file) === ".pl")&&(path.basename(file,'.pl') != "main")) return file});
+	if (files != undefined){
+		// switch the playlist as soon as all media are downloaded
+		files.forEach(function(file) {
+			fs.readFile(playlistsPath+file, function (err, data) {
+			  if (err){
+				  console.log("=> switch playlist failed : "+ file);
+			  }
+			  var playlistObj = JSON.parse(data);	
+			  //console.log(playlistObj.length)
+			  var mainpl = "1\n";
+			  for (var i=0; i < playlistObj.length ; i++){
+				  //console.log(playlistObj[i].id);
+				  var medias = playlistObj[i].medias;
+				  if (medias != undefined){
+					medias.forEach(function(media){
+						mainpl +=  mediasPath+media+"\n";	
+					});
+				  }
+			  }
+			  fs.writeFile(playlistsPath+"main.pl", mainpl, function (err) {
+				  if (err){
+					console.log("=> Error : main playlist not saved "+err);
+				  }else{
+					console.log("=> Main Playlist switch, the player will update the playlist shortly ");
+				  }
+   			  });
+			 
+		  });
+		});
+	}
+	});	
 }
 
 /*
