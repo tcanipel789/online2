@@ -12,7 +12,7 @@
     <th>Name</th>
     <th>Progress</th>
     <th>From</th>
-	<th>To</th>
+	<th class="hidden-xs">To</th>
 	<th class="text-right"><span  class="label label-default">{{broadcasts.length}}</span></th>
   </tr></thead>
   <tbody><tr ng-repeat="broadcast in broadcasts">
@@ -26,8 +26,8 @@
 		</div>
 	</div>
 	</td>
-	<td><button class="btn disabled" >{{ broadcast.datefrom | date:'yyyy-MM-dd HH:mm' }}</button></td>
-	<td><button class="btn disabled" >{{ broadcast.dateto | date:'yyyy-MM-dd HH:mm' }}</button></td>
+	<td><button class="btn btn-default btn-block btn-sm" >{{ broadcast.datefrom | date:'yyyy-MM-dd HH:mm' }}</button></td>
+	<td><button class="btn btn-default btn-block btn-sm" >{{ broadcast.dateto | date:'yyyy-MM-dd HH:mm' }}</button></td>
 	<td  class="col-md-6 text-right">
 	  <button class="btn" ng-click="activateBroadcast(broadcast.id, broadcast.broadcasted )">
         <span ng-class=" {{broadcast.broadcasted}} ? 'glyphicon glyphicon-check' : 'glyphicon glyphicon-unchecked'"></span>
