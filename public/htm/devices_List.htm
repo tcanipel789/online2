@@ -17,7 +17,7 @@
   </thead>
   <tbody><tr ng-repeat="device in devices">
     <td  class="col-md-2">
-		<button class="btn btn-success" ng-click="editDevice(device.id)">
+		<button class="btn" ng-class="detectClass(device.lastseen)" ng-click="editDevice(device.id)">
 			online
 		</button>
 	</td>

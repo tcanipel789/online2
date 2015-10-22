@@ -115,7 +115,7 @@ var switchPlaylist = function (){
 					console.log("=> Error : main playlist not saved "+err);
 				  }else{
 					// tell the player to reload a new playlist using a semaphore
-					fs.writeFile(playlistsPath+shortid.generate()+".sm", mainpl, function (err) {
+					fs.writeFile(playlistsPath+shortid.generate()+".sm", "", function (err) {
 					if (err){
 						console.log("=> Error : semaphore not saved "+err);
 					}
@@ -300,5 +300,5 @@ function httpPost(codestring, path) {
 setInterval(deviceInformation, 10000);
 //setInterval(downloadManager, 10000);
 setInterval(updatePlaylist, 10000);
-setInterval(switchPlaylist, 1000);
+setInterval(switchPlaylist, 10000);
 

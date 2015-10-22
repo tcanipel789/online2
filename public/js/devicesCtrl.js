@@ -133,6 +133,19 @@ $scope.cancel = function() {
  $scope.listVisible = true;
 };
 
+$scope.detectClass = function(dateDevice){
+ var currentDate = new Date();
+ var fiveminutesbefore = new Date(currentDate.getTime() - (5 * 60 * 1000)).toISOString();
+
+ if (fiveminutesbefore < dateDevice ){
+	 return "btn-success";
+ }else{
+	return "btn-warning";
+ }
+}
+
+
+
 $scope.$watch('playerVisible',function(){$scope.reload();});
 $scope.$watch('status',function() {$scope.test();});
 $scope.$watch('name', function() {$scope.test();});

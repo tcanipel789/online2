@@ -60,4 +60,4 @@ var checkSemaphore = function (){
 }
 
 
-setInterval(checkSemaphore, 1000);
+setInterval(checkSemaphore, 10000);
