@@ -18,6 +18,7 @@ var _mac  = getMac();
 var _mem = '-';
 var _ip ='-';
 var refresh = "/online/broadcasts/"+_mac; // URL WITH PLAYER NAME
+var playlistMarker=null;
 
 /*
 / Functions to fetch every 10s if a new playlist is available
@@ -53,7 +54,7 @@ var updatePlaylist = function(){
 						console.log("=> Error : Playlist not saved "+err);
 					  }else{
 						console.log("=> Playlist saved ");
-						switchPlaylist(); // TODO download the medias, move the location of the switch only when media are availables
+						playlistMarker=-1;
 					  }
 					});
 				});	
@@ -79,33 +80,51 @@ var switchPlaylist = function (){
 	files = files.filter(function(file) { if ((path.extname(file) === ".pl")&&(path.basename(file,'.pl') != "main")) return file});
 	if (files != undefined){
 		// switch the playlist as soon as all media are downloaded
-		files.forEach(function(file) {
+			var file = files[0]; // only one file in the playlist (apart from the main)
 			fs.readFile(playlistsPath+file, function (err, data) {
 			  if (err){
 				  console.log("=> switch playlist failed : "+ file);
+				  return;
 			  }
 			  var playlistObj = JSON.parse(data);	
-			  //console.log(playlistObj.length)
-			  var mainpl = "1\n";
+			  var mainpl = "true\n";
+			  var updated=0; // marker to know if main.pl need to be rewrite
 			  for (var i=0; i < playlistObj.length ; i++){
-				  //console.log(playlistObj[i].id);
+				  //select the first playlist that match the datefrom dateto
+				  var date = new Date().toISOString();
+				  
+				  if ((date < playlistObj[i].dateto) && (date > playlistObj[i].datefrom)){ // select the playlist that match the time
+				  //console.log(playlistObj[i].id +" "+playlistMarker);
+				  if ((playlistObj[i].id == playlistMarker) || (playlistMarker == null)){
+					  return;  // dont update the main playlist
+				  }
+				  playlistMarker=playlistObj[i].id;
 				  var medias = playlistObj[i].medias;
 				  if (medias != undefined){
 					medias.forEach(function(media){
 						mainpl +=  mediasPath+media+"\n";	
 					});
 				  }
+				  updated=1;
+				  break;
+				  }
 			  }
-			  fs.writeFile(playlistsPath+"main.pl", mainpl, function (err) {
+			  if (updated==1){
+			  fs.writeFile(playlistsPath+"main.pl", mainpl, function (err) { // rewrite the mainpl
 				  if (err){
 					console.log("=> Error : main playlist not saved "+err);
 				  }else{
+					// tell the player to reload a new playlist using a semaphore
+					fs.writeFile(playlistsPath+shortid.generate()+".sm", mainpl, function (err) {
+					if (err){
+						console.log("=> Error : semaphore not saved "+err);
+					}
+					});
 					console.log("=> Main Playlist switch, the player will update the playlist shortly ");
 				  }
    			  });
-			 
+			  }
 		  });
-		});
 	}
 	});	
 }
@@ -281,5 +300,5 @@ function httpPost(codestring, path) {
 setInterval(deviceInformation, 10000);
 //setInterval(downloadManager, 10000);
 setInterval(updatePlaylist, 10000);
-
+setInterval(switchPlaylist, 1000);
 
