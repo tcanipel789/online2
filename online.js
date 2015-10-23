@@ -70,7 +70,7 @@ app.get("/online/devices",function(req,res){
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
-		client.query("SELECT * FROM devices ORDER BY id ASC;", function(err, result) {
+		client.query("SELECT * FROM devices ORDER BY id DESC;", function(err, result) {
 			//call `done()` to release the client back to the pool
 			done();
 			if(err) {
@@ -139,7 +139,7 @@ app.get("/online/medias",function(req,res){
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
-		client.query("SELECT * FROM medias ORDER BY id ASC;", function(err, result) {
+		client.query("SELECT * FROM medias ORDER BY id DESC;", function(err, result) {
 			//call `done()` to release the client back to the pool
 			done();
 			if(err) {
@@ -267,7 +267,7 @@ app.get("/online/broadcasts",function(req,res){
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
-		client.query("SELECT * FROM broadcasts ORDER BY id ASC;", function(err, result) {
+		client.query("SELECT * FROM broadcasts ORDER BY id DESC;", function(err, result) {
 			//call `done()` to release the client back to the pool
 			done();
 			if(err) {
