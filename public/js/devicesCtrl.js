@@ -144,6 +144,17 @@ $scope.detectClass = function(dateDevice){
  }
 }
 
+$scope.detectLabel = function(dateDevice){
+ var currentDate = new Date();
+ var fiveminutesbefore = new Date(currentDate.getTime() - (5 * 60 * 1000)).toISOString();
+
+ if (fiveminutesbefore < dateDevice ){
+	 return "online";
+ }else{
+	return "offline";
+ }
+}
+
 
 
 $scope.$watch('playerVisible',function(){$scope.reload();});
