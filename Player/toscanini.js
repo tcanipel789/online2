@@ -28,7 +28,7 @@ var updatePlaylist = function(){
 	  res.on("data",function (data){
 			
 			if (res.statusCode != 404){
-				console.log("=> New main playlist available");
+				console.log("=> New playlist available");
 				
 				
 				fs.readdir(playlistsPath, function(err,files){
@@ -49,14 +49,13 @@ var updatePlaylist = function(){
 				var playlistObj = JSON.parse(data);	
 				var playlistName = shortid.generate();
 				
-				fs.writeFile(playlistsPath+playlistName+".pl", JSON.stringify(playlistObj), function (err) {
-					  if (err){
-						console.log("=> Error : Playlist not saved "+err);
-					  }else{
-						console.log("=> Playlist saved ");
-						playlistMarker=-1;
-					  }
-					});
+				try {
+				  fs.writeFileSync(playlistsPath+playlistName+".pl", JSON.stringify(playlistObj));
+				  console.log("=> Playlist saved ");
+				  playlistMarker=-1;
+				} catch (e) {
+					console.log(">Error when writing the downloaded playlist");
+				}
 				});	
 			}else{
 				console.log("=> No new main playlist available");
@@ -114,13 +113,7 @@ var switchPlaylist = function (){
 				  if (err){
 					console.log("=> Error : main playlist not saved "+err);
 				  }else{
-					// tell the player to reload a new playlist using a semaphore
-					fs.writeFile(playlistsPath+shortid.generate()+".sm", "", function (err) {
-					if (err){
-						console.log("=> Error : semaphore not saved "+err);
-					}
-					});
-					console.log("=> Main Playlist switch, the player will update the playlist shortly ");
+					console.log("=> Main Playlist switch, Bach will update the player");
 				  }
    			  });
 			  }
