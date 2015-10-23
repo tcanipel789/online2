@@ -22,8 +22,8 @@
     </td>
 	<td><button class="btn btn-default disabled btn-block btn-sm" am-time-ago="media.created"></button></td>
 	<td  class="col-md-6 text-right">
-	 <button class="btn" ng-click="removeMedia(media.id)">
-        <span ng-class="styleremove" ></span>
+	 <button class="btn" ng-click="removeMedia(media.id,media)">
+        <span ng-class="checkRemoveStatus(media)" ></span>
       </button>
       <button class="btn" ng-click="editMedia(media.id)">
         <span class="glyphicon glyphicon-pencil"></span>

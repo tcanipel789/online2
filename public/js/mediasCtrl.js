@@ -21,7 +21,6 @@ $scope.isTansferVisible = true;
 $scope.tagVisible = false;
 $scope.styleSave="glyphicon glyphicon-save";
 $scope.stylereload = "glyphicon glyphicon-refresh";
-$scope.styleremove = "glyphicon glyphicon-remove";
 
 
 
@@ -151,21 +150,27 @@ $scope.save = function() {
 	  });
 	
 };
-$scope.removeMedia = function(idMedia) {
-	$scope.styleremove = "glyphicon glyphicon-transfer";
+$scope.removeMedia = function(idMedia,media) {
+	media.removing=true;
 	var data = {string: {id: idMedia }};
 	$http.post('/online/medias/r/', data).
 	  then(function(response) {
 		if (response.status == 200){
-			$scope.styleremove = "glyphicon glyphicon-remove";
 			$scope.reload(); // refresh the list
 		}
 	  }, function(error) {
 		// called asynchronously if an error occurs
 		console.log("> error when savings" + error);
-		$scope.styleremove = "glyphicon glyphicon-remove";
 	  });
 	
+};
+
+$scope.checkRemoveStatus = function(media){
+	if (media.removing){
+		 return "glyphicon glyphicon-transfer";
+	}else{
+		 return "glyphicon glyphicon-remove";
+	}
 };
 
 $scope.$watch('mediaVisible',function() {$scope.reload();}); 

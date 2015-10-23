@@ -11,11 +11,19 @@ $scope.isTansferVisible = true;
 $scope.isTansferVisibleMedia = true;
 $scope.fromvisible=false;
 $scope.tovisible=false;
+$scope.dailyfromvisible=false;
+$scope.dailytovisible=false;
 
 $scope.tags='';
 $scope.medias='';
 
-
+$scope.showDailyTo = function(){
+	if ($scope.dailytovisible){
+		$scope.dailytovisible = false;
+	}else{
+		$scope.dailytovisible = true;
+	}
+}
 $scope.showDateTo = function(){
 	if ($scope.tovisible){
 		$scope.tovisible = false;
@@ -23,7 +31,13 @@ $scope.showDateTo = function(){
 		$scope.tovisible = true;
 	}
 }
-
+$scope.showDailyFrom = function(){
+	if ($scope.dailyfromvisible){
+		$scope.dailyfromvisible = false;
+	}else{
+		$scope.dailyfromvisible = true;
+	}
+}
 $scope.showDateFrom = function(){
 	if ($scope.fromvisible){
 		$scope.fromvisible = false;
@@ -104,7 +118,8 @@ $scope.reload = function() {
 	}
 }
 
-$scope.activateBroadcast= function(id,value){
+$scope.activateBroadcast= function(id,value,broad){
+	broad.saving = true;
 	$scope.id = id;
 	$scope.name = null;
 	$scope.datefrom = null;
@@ -201,23 +216,39 @@ $scope.save = function() {
 	
 };
 
-$scope.removeBroadcast = function(idBroadcast) {
-	$scope.styleremove = "glyphicon glyphicon-transfer";
+$scope.removeBroadcast = function(idBroadcast,broadcast) {
+	broadcast.removing = true;
 	var data = {string: {id: idBroadcast }};
 	$http.post('/online/broadcasts/r/', data).
 	  then(function(response) {
 		if (response.status == 200){
-			$scope.styleremove = "glyphicon glyphicon-remove";
 			$scope.reload(); // refresh the list
 		}
 	  }, function(error) {
 		// called asynchronously if an error occurs
 		console.log("> error when savings" + error);
-		$scope.styleremove = "glyphicon glyphicon-remove";
-	  });
+	 });
 	
 };
 
+$scope.checkStatus = function(broadcast){
+	if (broadcast.saving){
+		 return "glyphicon glyphicon-transfer";
+	}
+	if (broadcast.broadcasted){
+		 return "glyphicon glyphicon-check";
+	 }else{
+		return "glyphicon glyphicon-unchecked";
+	 }
+};
+
+$scope.checkRemoveStatus = function(broadcast){
+	if (broadcast.removing){
+		 return "glyphicon glyphicon-transfer";
+	}else{
+		 return "glyphicon glyphicon-remove";
+	}
+};
 
 
 $scope.$watch('broadcastVisible',function() {$scope.reload();}); 

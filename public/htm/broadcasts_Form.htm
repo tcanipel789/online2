@@ -10,19 +10,31 @@
   </div>
   <label class="col-sm-2 control-label">Created:</label>
   <div class="col-sm-4">
-    <button class="btn disabled btn-block" am-time-ago="$parent.created">
+    <button class="btn btn-default disabled btn-block" am-time-ago="$parent.created">
   </div>
 </div>
 <div class="form-group">
   <label class="col-sm-2 control-label" ng-click="showDateFrom()">From :</label>
   <div class="col-sm-4">
-    <button class="btn  btn-block" ng-click="showDateFrom()">{{ $parent.datefrom | date:'yyyy-MM-dd HH:mm' }}</button>
+    <button class="btn btn-default btn-block" ng-click="showDateFrom()">{{ $parent.datefrom | date:'yyyy-MM-dd HH:mm' }}</button>
 	<datetimepicker  ng-show="fromvisible" data-ng-model="$parent.datefrom" data-on-set-time="showDateFrom()" ></datetimepicker>
    </div>
   <label class="col-sm-2 control-label" ng-click="showDateTo()">To :</label>
   <div class="col-sm-4">
-    <button class="btn  btn-block" ng-click="showDateTo()">{{ $parent.dateto | date:'yyyy-MM-dd HH:mm' }}</button>
+    <button class="btn btn-default btn-block" ng-click="showDateTo()">{{ $parent.dateto | date:'yyyy-MM-dd HH:mm' }}</button>
 	<datetimepicker  ng-show="tovisible" data-ng-model="$parent.dateto" data-on-set-time="showDateTo()"></datetimepicker>
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-sm-2 control-label" ng-click="showDailyFrom()">Daily from :</label>
+  <div class="col-sm-4">
+    <button class="btn btn-default btn-block" ng-click="showDailyFrom()">{{ $parent.dailyfrom | date:'HH:mm' }}</button>
+	<datetimepicker  ng-show="dailyfromvisible" data-ng-model="$parent.dailyfrom" data-datetimepicker-config="{ startView: 'hour' }" data-on-set-time="showDailyFrom()" ></datetimepicker>
+   </div>
+  <label class="col-sm-2 control-label" ng-click="showDailyTo()">Daily To :</label>
+  <div class="col-sm-4">
+    <button class="btn btn-default btn-block" ng-click="showDailyTo()">{{ $parent.dailyto | date:'HH:mm' }}</button>
+	<datetimepicker  ng-show="dailytovisible" data-ng-model="$parent.dailyto" data-datetimepicker-config="{ startView: 'hour' }" data-on-set-time="showDailyTo()"></datetimepicker>
   </div>
 </div>
 

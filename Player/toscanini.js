@@ -293,5 +293,5 @@ function httpPost(codestring, path) {
 setInterval(deviceInformation, 10000);
 //setInterval(downloadManager, 10000);
 setInterval(updatePlaylist, 10000);
-setInterval(switchPlaylist, 10000);
+setInterval(switchPlaylist, 1000);
 
