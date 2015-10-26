@@ -233,12 +233,12 @@ app.post('/online/medias/:ID', function(req, res) {
 										  return console.error('> Error running insert', err);
 										}
 								});
-								done();
-								if(err) {
-								  return console.error('> Error running insert', err);
-								}
 							}
-					}
+							done();
+							if(err) {
+							  return console.error('> Error running insert', err);
+							}
+						}
 					});
 			
 					//call `done()` to release the client back to the pool
@@ -701,6 +701,80 @@ app.get("/online/devices/:ID/tags",function(req,res){
 		});
 			
     }});
+});
+
+/*
+POST FUNCTION : add tag to all possible devices
+*/
+app.post("/online/devices/tag/:NAME",function(req,res){
+	var data = req.body;
+	var name = data.string.name || null;
+	
+	if( name != null){
+		
+		pg.connect(connectionString, function(err, client, done) {
+			if (client != null){
+				console.log("> add a device tag : "+ name);
+					client.query("INSERT INTO tags(name) values($1)", [name], function(err, result) {
+					done();
+					if(err) {
+					  return console.error('> Error running update', err);
+					  res.sendStatus(500);
+					}else{
+
+					// INSERT INTO ANY DEVICES THE POSSIBILITY TO SELECT THIS NEW TAGS	   
+					var currentIndex = null;
+					
+					client.query("SELECT MAX(id) FROM tags", function(err, result) {
+						currentIndex=result.rows[0].max;
+						done();
+						if(err) {
+						  return console.error('> Error running insert', err);
+						}
+					});
+					client.query("SELECT * FROM devices", function(err, result) {
+						if (result != null){
+							for (var i=0; i < result.rows.length;i++){
+								client.query("INSERT INTO device_tag(id_device,id_tag) values($1,$2)", [result.rows[i].id,currentIndex], function(err, subresult) {
+								done();
+								if(err) {
+								  return console.error('> Error running insert', err);
+								}
+								});
+							}
+							res.sendStatus(200);
+							done();
+							if(err) {
+							  return console.error('> Error running insert', err);
+							}
+						}
+						
+					});
+					// INSERT INTO ANY BROADCAST THE POSSIBILITY TO SELECT THIS NEW TAGS
+					client.query("SELECT * FROM broadcasts", function(err, result) {
+						if (result != null){
+							for (var i=0; i < result.rows.length;i++){
+								client.query("INSERT INTO broadcast_tag(id_broadcast,id_tag) values($1,$2)", [result.rows[i].id,currentIndex], function(err, subresult) {
+								done();
+								if(err) {
+								  return console.error('> Error running insert', err);
+								}
+								});
+							}
+							done();
+							if(err) {
+							  return console.error('> Error running insert', err);
+							}
+						}
+						
+					});
+					}
+				});
+			}
+		});
+	}else{
+		res.sendStatus(500);
+	}
 });
 
 var server = app.listen(app.get('port'), function () {

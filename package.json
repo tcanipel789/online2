@@ -1,6 +1,6 @@
 {
   "name": "online-application",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "description": "NodeJs Server",
   "main": "online.js",
   "scripts": {
@@ -11,7 +11,8 @@
     "express": "4.13.1",
 	"pg": "4.4.1",
 	"ftp": "0.3.10",
-	"angular-moment": "0.10.3"
+	"angular-moment": "0.10.3",
+	"shortid": "2.2.4"
   },
   "engines": {
     "node": "0.12.4"

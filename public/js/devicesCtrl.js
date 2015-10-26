@@ -13,6 +13,8 @@ $scope.created = '';
 $scope.memory = '';
 $scope.description = '';
 $scope.owner = '';
+$scope.newtag = '';
+$scope.statusSavingTag=false;
 
 $scope.edit = true;
 $scope.error = false;
@@ -132,6 +134,29 @@ $scope.cancel = function() {
  $scope.isVisible = false;
  $scope.listVisible = true;
 };
+
+$scope.addTag = function() {
+    console.log("new tag name "+$scope.newtag);
+	if ($scope.newtag != ""){
+	var deviceData = {string: {name: $scope.newtag}};
+	var jsonDevice = JSON.stringify(deviceData);
+	$scope.statusSavingTag=true;
+	$http.post('/online/devices/tag/newtag',deviceData).
+	  then(function(response) {
+		if (response.status == 200){
+			$scope.statusSavingTag=false;
+			$scope.newtag = '';
+			$scope.getDevicesTags(); // refresh the tags
+		}
+	  }, function(error) {
+		// called asynchronously if an error occurs
+		console.log("> error when savings" + error);
+		$scope.newtag = '';
+		$scope.statusSavingTag=true;
+	  });
+	 }
+};
+
 
 $scope.detectClass = function(dateDevice){
  var currentDate = new Date();
