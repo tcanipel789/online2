@@ -141,7 +141,7 @@ $scope.addTag = function() {
 	var deviceData = {string: {name: $scope.newtag}};
 	var jsonDevice = JSON.stringify(deviceData);
 	$scope.statusSavingTag=true;
-	$http.post('/online/devices/tag/newtag',deviceData).
+	$http.post('/online/devices/tag/newtag/'+$scope.id,deviceData).
 	  then(function(response) {
 		if (response.status == 200){
 			$scope.statusSavingTag=false;

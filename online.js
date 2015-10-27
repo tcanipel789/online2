@@ -707,7 +707,7 @@ app.get("/online/devices/:ID/tags",function(req,res){
 /*
 POST FUNCTION : add tag to all possible devices
 */
-app.post("/online/devices/tag/:NAME",function(req,res){
+app.post("/online/devices/tag/:NAME/:ID",function(req,res){
 	var data = req.body;
 	var name = data.string.name || null;
 	
@@ -742,8 +742,12 @@ app.post("/online/devices/tag/:NAME",function(req,res){
 								  return console.error('> Error running insert', err);
 								}
 								});
+								var idTemp = result.rows[i].id;
+								if (idTemp != undefined){
+									if (idTemp == req.params.ID) res.sendStatus(200);
+								}
 							}
-							res.sendStatus(200);
+							
 							done();
 							if(err) {
 							  return console.error('> Error running insert', err);
