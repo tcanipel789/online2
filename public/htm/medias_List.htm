@@ -9,7 +9,7 @@
 <table class="table table-striped">
   <thead><tr>
     <th>Name</th>
-    <th>Type</th>
+    <th class="hidden-xs">Type</th>
 	<th>Created</th>
 	<th class="text-right"><span  class="label label-default">{{medias.length}}</span></th>
   </tr></thead>
@@ -17,7 +17,7 @@
     <td>
 			<button class="btn btn-info btn-block" ng-click="editMedia(media.id)" >{{ media.name }}</button>
 	</td>
-    <td>
+    <td class="hidden-xs">
 			<button class="btn disabled" >{{ media.type }}</button>
     </td>
 	<td><button class="btn btn-default disabled btn-block btn-sm" am-time-ago="media.created"></button></td>
@@ -25,7 +25,7 @@
 	 <button class="btn hidden-xs" ng-click="removeMedia(media.id,media)">
         <span ng-class="checkRemoveStatus(media)" ></span>
       </button>
-      <button class="btn hidden-xs" ng-click="editMedia(media.id)">
+      <button class="btn" ng-click="editMedia(media.id)">
         <span class="glyphicon glyphicon-pencil"></span>
       </button>
 	  <button class="btn disabled hidden-xs" >
