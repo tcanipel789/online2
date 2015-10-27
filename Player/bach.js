@@ -4,7 +4,7 @@ var playlistsPath = "/playlist/"; // "./playlist/" // PLAYLIST FOLDER ON DEVICE
 var mediasPath = "/media/";    // "/medias/"   // MEDIAS FOLDER ON DEVICE
 var path = require('path');
 
-var cPlayerProcess;
+var cPlayerProcess=null;
 var cmd = 'cplayer';
 var lastplaylist = "";
 var marker = process.argv[2];
@@ -18,6 +18,10 @@ var initializeProcess = function (){
         process.once('exit', function (code, signal) {
                 process = null;
 				console.log("> Bach : cPlayer has been terminated");
+				// relaunch a new process after 1s
+				setTimeout(function() {
+					cPlayerProcess = initializeProcess();
+				}, 1000);
         });
 
         return process;
@@ -25,7 +29,10 @@ var initializeProcess = function (){
 
 var closeProcess = function (){
         console.log("> Bach : Kill Signal sent");
-		if (cPlayerProcess) cPlayerProcess.kill('SIGHUP');
+		if (cPlayerProcess != null) {
+			console.log("> Bach : access the process");
+			cPlayerProcess.kill('SIGHUP');
+		}
 }
 
 var checkSemaphore = function (){
@@ -44,7 +51,6 @@ var checkSemaphore = function (){
 		  //console.log('the previous mtime was: ' + prev.mtime);
 		  console.log("> Bach : Change detected in the main playlist")
 		  closeProcess();
-		  cPlayerProcess = initializeProcess();
 	});
 		
 }
