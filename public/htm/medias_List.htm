@@ -22,13 +22,13 @@
     </td>
 	<td><button class="btn btn-default disabled btn-block btn-sm" am-time-ago="media.created"></button></td>
 	<td  class="col-md-6 text-right">
-	 <button class="btn" ng-click="removeMedia(media.id,media)">
+	 <button class="btn hidden-xs" ng-click="removeMedia(media.id,media)">
         <span ng-class="checkRemoveStatus(media)" ></span>
       </button>
       <button class="btn" ng-click="editMedia(media.id)">
         <span class="glyphicon glyphicon-pencil"></span>
       </button>
-	  <button class="btn disabled" >
+	  <button class="btn disabled hidden-xs" >
         <span class="glyphicon glyphicon-user"></span>
       </button>
     </td>

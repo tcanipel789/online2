@@ -10,7 +10,7 @@
 <table class="table table-striped">
   <thead><tr>
     <th>Name</th>
-    <th>Progress</th>
+    <th class="hidden-xs">Progress</th>
     <th>From</th>
 	<th>To</th>
 	<th class="text-right"><span  class="label label-default">{{broadcasts.length}}</span></th>
@@ -19,26 +19,28 @@
    <td>
 	  <button class="btn btn-info btn-block" ng-click="editBroadcast(broadcast.id)" >{{ broadcast.name }}</button>
 	</td>
-    <td>
+    <td class="hidden-xs">
 	<div class="progress">
 		<div class="progress-bar" role="progressbar" aria-valuenow="{{ broadcast.progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ broadcast.progress }}%;">
 		{{ broadcast.progress }}%
 		</div>
 	</div>
 	</td>
-	<td><button class="btn btn-default disabled btn-block btn-sm" >{{ broadcast.datefrom | date:'yyyy-MM-dd HH:mm' }}</button></td>
-	<td><button class="btn btn-default disabled btn-block btn-sm" >{{ broadcast.dateto | date:'yyyy-MM-dd HH:mm' }}</button></td>
+	<td class="hidden-xs"><button class="btn btn-default disabled btn-block btn-sm" >{{ broadcast.datefrom | date:'yyyy-MM-dd HH:mm' }}</button></td>
+	<td class="hidden-xs"><button class="btn btn-default disabled btn-block btn-sm" >{{ broadcast.dateto | date:'yyyy-MM-dd HH:mm' }}</button></td>
+	<td class="visible-xs"><button class="btn btn-default disabled btn-block btn-sm" >{{ broadcast.datefrom | date:'MM-dd' }}</button></td>
+	<td class="visible-xs"><button class="btn btn-default disabled btn-block btn-sm" >{{ broadcast.dateto | date:'MM-dd' }}</button></td>
 	<td  class="col-md-6 text-right">
 	  <button class="btn" ng-click="activateBroadcast(broadcast.id, broadcast.broadcasted , broadcast)">
         <span ng-class="checkStatus(broadcast)"></span>
       </button>
-	  <button class="btn" ng-click="removeBroadcast(broadcast.id,broadcast)">
+	  <button class="btn hidden-xs" ng-click="removeBroadcast(broadcast.id,broadcast)">
         <span ng-class="checkRemoveStatus(broadcast)" ></span>
       </button>
       <button class="btn" ng-click="editBroadcast(broadcast.id)">
         <span class="glyphicon glyphicon-pencil"></span>
       </button>
-	  <button class="btn disabled" >
+	  <button class="btn disabled hidden-xs" >
         <span class="glyphicon glyphicon-user"></span>
       </button>
     </td>
