@@ -1,10 +1,15 @@
 var pg = require('pg');
-var connectionString = 'postgres://csvpsujaljamxy:gcjhDnpk7mFfLVhz7KbP0Qhy5w@ec2-50-19-208-138.compute-1.amazonaws.com:5432/d6dss85etufrmo?ssl=true';
+var connectionString = 'postgres://fhaffwscrcrbqk:szPm6qahfBVt9caoCT9LspKavB@ec2-54-197-241-24.compute-1.amazonaws.com:5432/d59390etfcghc7?ssl=true';
 
 var client = new pg.Client(connectionString);
 client.connect();
 var query = client.query('DELETE FROM devices');
 query.on('end', function() { client.end(); });
+
+var client2 = new pg.Client(connectionString);
+client2.connect();
+var query = client2.query('DELETE FROM tags');
+query.on('end', function() { client2.end(); });
 
 var client3 = new pg.Client(connectionString);
 client3.connect();
