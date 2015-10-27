@@ -151,8 +151,9 @@ $scope.addTag = function() {
 	  }, function(error) {
 		// called asynchronously if an error occurs
 		console.log("> error when savings" + error);
+		$scope.tagerror = 'error when retrieving selected tags';
 		$scope.newtag = '';
-		$scope.statusSavingTag=true;
+		$scope.statusSavingTag=false;
 	  });
 	 }
 };
