@@ -360,6 +360,7 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 			}
 			
 			// UPDATE ALL DEPENDANCIES TO DEVICES
+			
 			if (tags != null){
 				console.log("> SQL Trying to updating the broadcast devices list ");	
 				
@@ -379,7 +380,6 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 					}
 					inclause=inclause.slice(0, -1);
 					
-					
 					// Identify the devices impacted, and reset their status
 					var commandUpdate = "UPDATE broadcast_devices SET updated=false WHERE id_device IN (SELECT devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id IN ("+inclause+")))";
 					client.query(commandUpdate, function(err, result) {
@@ -387,8 +387,9 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 						if(err) {
 							return console.error('> Error running update', err);
 						}else{
+							console.log("Get the distinct devices id that match the group of tags and insert them for id"+ id);
 							//Get the distinct devices id that match the group of tags and insert them
-							var command ="INSERT INTO broadcast_devices (id_broadcast,updated,id_device) SELECT DISTINCT CAST( "+id+" as INT),false,devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id IN ("+inclause+"))";
+							var command ="INSERT INTO broadcast_devices (id_broadcast,updated,id_device) SELECT DISTINCT CAST( "+id+" as INT),false,devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id_tag IN ("+inclause+"))";
 							client.query(command, function(err, result) {
 							done();
 							if(err) {
@@ -490,7 +491,7 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 		if (client != null){
 			console.log("> Retrieve broadcast ID that are eligible to display "+name );
 			client.query("SELECT id_broadcast,updated FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND broadcast_devices.updated = false AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
-			//client.query("SELECT id_broadcast,updated FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
+			//client.query("SELECT id_broadcast,updated FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=('b827') AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
 			
 			done();
 			if(err) {
