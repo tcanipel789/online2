@@ -3,7 +3,6 @@ var bodyParser = require('body-parser');
 var pg = require ('pg');
 var fs = require ('fs');
 var app = express();
-var Client = require('ftp');
 
 var mock = 0;
 
@@ -14,51 +13,11 @@ app.use(express.static('public'));
 var connectionString = process.env.HEROKU_POSTGRESQL_COPPER_URL || 'postgres://fhaffwscrcrbqk:szPm6qahfBVt9caoCT9LspKavB@ec2-54-197-241-24.compute-1.amazonaws.com:5432/d59390etfcghc7?ssl=true';
 //update the media list and store it in the database
 var connectionProperties = {host: "online.royalwebhosting.net",user: "1942016",password: "hellmaster"};
-var ftpresult = [];
 
 app.get("/online",function(req,res){
 	res.sendfile("./public/htm/online.html");
 });
 
-app.get("/online/ftp/listing",function(req,res){
-	console.log("GET > retrieving medias on the FTP account");
-	
-});
-
-function UpdateFtpMedias(){
-	console.log("FTP > retrieving medias on the FTP account");
-	var result = [];
-	var c = new Client();
-	
-	console.log('FTP > size of the current list '+ ftpresult.length);
-	// Clear the current ftpresult
-	for (var i=0; i < ftpresult.length ; i++){
-		ftpresult.pop();
-	}
-	console.log('FTP > removing all elements '+ ftpresult.length);
-	c.on('ready', function () {
-    console.log('FTP > ready');
-		c.list('/online.royalwebhosting.net',function (err, list) {
-			if (err){
-				console.error('>FTP : connection error  ' + err);
-				return;
-			};
-			list.forEach(function (element, index, array) {
-				//Ignore directories
-				if (element.type === 'd') {
-					console.log('>FTP : ignoring directory ' + element.name);
-					return;
-				}
-				console.log('>FTP : detecting an element ' + element.name);
-				ftpresult.push(element);
-			});
-		});
-	});
-	c.on('error', function (err) {
-		console.error('>FTP : connection error  ' + err);
-	});
-	c.connect(connectionProperties);	
-};
 
 /*
 GET FUNCTION : send back the information of all players registered online
@@ -788,5 +747,4 @@ var server = app.listen(app.get('port'), function () {
 
 });;
 
-//setInterval(UpdateFtpMedias, 10000);
 
