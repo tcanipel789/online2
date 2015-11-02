@@ -29,7 +29,7 @@ query.on('end', function() { client5.end(); });
 
 var client6 = new pg.Client(connectionString);
 client6.connect();
-var query = client6.query('CREATE TABLE broadcasts (id SERIAL PRIMARY KEY, name VARCHAR(100) not null, datefrom VARCHAR(25),dateto VARCHAR(25),created VARCHAR(25),broadcasted BOOLEAN,owner INT)');
+var query = client6.query('CREATE TABLE broadcasts (id SERIAL PRIMARY KEY, name VARCHAR(100) not null,version VARCHAR(100), datefrom VARCHAR(25),dateto VARCHAR(25),created VARCHAR(25),broadcasted BOOLEAN,owner INT)');
 query.on('end', function() { client6.end(); });
 
 

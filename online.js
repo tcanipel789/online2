@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var pg = require ('pg');
 var fs = require ('fs');
 var app = express();
+var shortid = require('shortid');
 
 var mock = 0;
 
@@ -283,7 +284,7 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 	var medias = data.string.medias || null;
 	var id = data.string.id || null;
 	var broadcasted = data.string.broadcasted;
-	
+	var version = shortid.generate();
 	
 	console.log('POST> the broadcast : '+broadcasted+id+' / '+ name +' is sending information| ');
 	
@@ -292,7 +293,8 @@ app.post('/online/broadcasts/:ID', function(req, res) {
     pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
 			console.log("> Trying to updating an existing broadcast "+ name);
-		    client.query("UPDATE broadcasts SET name=coalesce(($1),name), datefrom=coalesce(($2),datefrom), dateto =coalesce(($3),dateto),owner =coalesce(($4),owner), broadcasted=($5) WHERE id=($6)", [name,datefrom,dateto,owner,broadcasted,id], function(err, result) {
+			
+		    client.query("UPDATE broadcasts SET name=coalesce(($1),name), datefrom=coalesce(($2),datefrom), dateto =coalesce(($3),dateto),owner =coalesce(($4),owner), broadcasted=($5),version=($6) WHERE id=($7)", [name,datefrom,dateto,owner,broadcasted,version,id], function(err, result) {
 			// UPDATE ALL DEPENDANCIES TO TAGS
 			if (tags != null){
 				for (var i = 0; i < tags.length ; i++){
@@ -372,7 +374,7 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 			if (result.rowCount !=  0)res.sendStatus(200);
 			if (result.rowCount ==  0){
 				  console.log("> Insert a new broadcast");
-				  client.query("INSERT INTO broadcasts(name,datefrom,dateto,owner,created,broadcasted) values($1,$2,$3,$4,$5,$6)", [name,datefrom,dateto,owner,date,broadcasted], function(err, result) {
+				  client.query("INSERT INTO broadcasts(name,datefrom,dateto,owner,created,broadcasted,version) values($1,$2,$3,$4,$5,$6,$7)", [name,datefrom,dateto,owner,date,broadcasted,version], function(err, result) {
 					  
 				 
 				  // INSERT ALL THE DEPENDENCIES TO MEDIAS
@@ -465,7 +467,7 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 				}
 				inclause=inclause.slice(0, -1);
 				console.log("> Retrieving the package of playlist : "+inclause);
-				var command = "SELECT broadcasts.id, broadcasts.name, broadcasts.datefrom, broadcasts.dateto , medias.ftplink FROM broadcasts JOIN broadcast_media ON broadcast_media.id_broadcast = broadcasts.id JOIN medias ON medias.id = broadcast_media.id_media WHERE broadcast_media.selected = true AND broadcasts.id  IN ("+inclause+")";
+				var command = "SELECT broadcasts.id,broadcasts.version, broadcasts.name, broadcasts.datefrom, broadcasts.dateto , medias.ftplink FROM broadcasts JOIN broadcast_media ON broadcast_media.id_broadcast = broadcasts.id JOIN medias ON medias.id = broadcast_media.id_media WHERE broadcast_media.selected = true AND broadcasts.id  IN ("+inclause+")";
 				client.query(command, function(err, resultBroadcast) {
 				//call `done()` to release the client back to the pool
 				done();
