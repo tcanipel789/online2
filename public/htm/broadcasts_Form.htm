@@ -41,8 +41,9 @@
 <div class="form-group">
   <label class="col-sm-2 control-label" ng-click="showTag()">Device Tags : </label>
   <div class="col-sm-10" ng-show="isTansferVisible"><label><button class="btn disabled glyphicon glyphicon-transfer"/></label></div>
+  <div class="col-sm-10" ng-show="tags.length != 0 " ng-click="showTag()"><label><button class="btn btn-default btn-block "/>Add tag(s)</label></div>
   <div class="col-sm-10" ng-click="showTag()">
-	 <label ng-repeat="tag in tags | filter:{selected : true}" >&nbsp;<button class="btn disabled btn-info" >{{ tag.name }}</button>&nbsp;</label>
+	 <label ng-repeat="tag in tags | filter:{selected : true}" >&nbsp;<button class="btn btn-info" ng-click="showTag()">{{ tag.name }}</button>&nbsp;</label>
   </div>
 </div>
 <div class="form-group" ng-show="tagVisible">
@@ -62,8 +63,9 @@
 <div class="form-group">
   <label class="col-sm-2 control-label" ng-click="showMedia()">Medias : </label>
   <div class="col-sm-10" ng-show="isTansferVisibleMedia"><label><button class="btn disabled glyphicon glyphicon-transfer"/></label></div>
+  <div class="col-sm-10" ng-show="medias.length != 0 " ng-click="showMedia()"><label><button class="btn btn-default btn-block"/>Add media(s)</label></div>
   <div class="col-sm-10" ng-click="showMedia()">
-	 <label ng-repeat="media in medias | filter:{selected : true}" >&nbsp;<button class="btn disabled btn-info" >{{ media.name }}</button>&nbsp;</label>
+	 <label ng-repeat="media in medias | filter:{selected : true}" >&nbsp;<button class="btn btn-info" ng-click="showMedia()">{{ media.name }}</button>&nbsp;</label>
   </div>
 </div>
 <div class="form-group" ng-show="mediaVisible">
