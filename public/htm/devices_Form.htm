@@ -31,10 +31,9 @@
   </div>
 </div>
 <div class="form-group">
-  <label class="col-sm-2 control-label" ng-click="showTag()">Tags : </label>
-  <div class="col-sm-10" ng-show="isTansferVisible"><label><button class="btn disabled glyphicon glyphicon-transfer"/></label></div>
-  <div class="col-sm-10" ng-click="showTag()">
-	 <label ng-repeat="tag in tags | filter:{selected : true}" >&nbsp;<button class="btn disabled btn-info" >{{ tag.name }}</button>&nbsp;</label>
+  <label class="col-sm-2 control-label" >Tags : </label>
+  <div class="col-sm-10">
+	 &nbsp;<button ng-show="isTansferVisible" class="btn disabled glyphicon glyphicon-transfer"/>&nbsp;<button ng-click="showTag()" ng-hide="isTansferVisible" class="btn btn-default">Add tag(s)</button>&nbsp;<label ng-repeat="tag in tags | filter:{selected : true}" >&nbsp;<button class="btn disabled btn-info" >{{ tag.name }}</button>&nbsp;</label>
   </div>
 </div>
 <div class="form-group" ng-show="tagVisible">
