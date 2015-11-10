@@ -19,7 +19,13 @@ app.get("/online",function(req,res){
 	res.sendfile("./public/htm/online.html");
 });
 
+app.get("/kakao",function(req,res){
+	res.sendfile("./public/htm/kakaotalkshare.htm");
+});
 
+app.get("/test",function(req,res){
+	res.sendfile("./public/htm/test.html");
+});
 /*
 GET FUNCTION : send back the information of all players registered online
 */

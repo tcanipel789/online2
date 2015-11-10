@@ -85,9 +85,14 @@ var switchPlaylist = function (){
 				  console.log("=> switch playlist failed : "+ file);
 				  return;
 			  }
-			  var playlistObj = JSON.parse(data);	
+			  var playlistObj;
+			  if (data!=""){
+				 playlistObj = JSON.parse(data);	
+			  }
+
 			  var mainpl = "true\n";
 			  var updated=0; // marker to know if main.pl need to be rewrite
+			  if( playlistObj != undefined ){
 			  for (var i=0; i < playlistObj.length ; i++){
 				  //select the first playlist that match the datefrom dateto
 				  var date = new Date().toISOString();
@@ -107,6 +112,7 @@ var switchPlaylist = function (){
 				  updated=1;
 				  break;
 				  }
+			  }
 			  }
 			  if (updated==1){
 			  fs.writeFile(playlistsPath+"main.pl", mainpl, function (err) { // rewrite the mainpl

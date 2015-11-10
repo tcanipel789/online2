@@ -41,6 +41,29 @@
 <footer class="footer">
   <div class="container">
 	<!--<a href="whatsapp://send?text=Hello%2C%20World!" >Share</a>-->
+	<script src="../lib/kakao.min.js"></script>
+	<script>
+    // Set JavaScript Key of current app.
+    Kakao.init('4974a1f3874f268070267639121239a4'); // registered by tcanipel@carlipa.com
+
+    // Create KakaoTalk Link button. You only need to call this function once.
+    Kakao.Link.createTalkLinkButton({
+      container: '#kakao-link-btn',
+      label: '',
+      image: {
+        src: 'http://dn.api1.kage.kakao.co.kr/14/dn/btqaWmFftyx/tBbQPH764Maw2R6IBhXd6K/o.jpg',
+        width: '80',
+        height: '80'
+      },
+      webButton: {
+        text: 'DesignYourLove',
+        url: 'https://dev.kakao.com/docs/js' // The URLs domain should be configured in app settings.
+      }
+    });
+    </script>
+	<a id="kakao-link-btn" href="javascript:;">
+        share kakao
+    </a>
   </div>
 </footer>
 
