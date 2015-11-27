@@ -2,7 +2,7 @@ app.controller('mainCtrl', function($scope, $http) {
 
  console.log("mainCtrl initiate");	
  
- $scope.playerVisible = false;
+ $scope.playerVisible = true;
  $scope.mediaVisible = false;
  $scope.broadcastVisible = false;
  $scope.programVisible = false;

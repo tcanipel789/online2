@@ -257,7 +257,7 @@ function getMac(){
 	if (object.eth0 != undefined){
 		var stringTemp = object.eth0[0].mac;
 		stringTemp = stringTemp.substring(0, 5);
-		stringTemp = stringTemp.replace(':','');
+		stringTemp = stringTemp.replace('/:/g','');
 		_mac = stringTemp;
 		console.log('=>Mac Adress information '+ _mac);
 	}else{
