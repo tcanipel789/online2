@@ -21,9 +21,14 @@
 			{{detectLabel(device.lastseen)}}
 		</button>
 	</td>
-    <td  class="col-md-2">
+    <td  class="col-md-2 hidden-xs">
 		<button class="btn disabled" >
 			{{ device.name }}
+		</button>
+    </td>
+	    <td  class="col-md-2 visible-xs">
+		<button class="btn disabled" >
+			{{ device.name | limitTo : 4}}
 		</button>
     </td>
 	<td class="col-md-2"><button class="btn btn-default btn-block disabled btn-sm" am-time-ago="device.created"></button></td>
