@@ -466,7 +466,7 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 			}else{
 				if (result.rows.length == 0) return res.sendStatus(404);
 				
-				 client.query("SELECT id_broadcast,updated FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND broadcast_devices.updated = false AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
+				 client.query("SELECT id_broadcast,updated FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
 					done();
 					if(err) {
 					  return console.error('> Error getting the playlists', err);
