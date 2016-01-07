@@ -465,61 +465,68 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 			  return console.error('> Error getting the main playlist', err);
 			}else{
 				if (result.rows.length == 0) return res.sendStatus(404);
-				// Generate a playlist and send it to the player
-				// Generate the IN clause string
-				var inclause="";	
-				for (var i = 0; i < result.rows.length ; i++){
-					inclause += result.rows[i].id_broadcast+",";
-				}
-				inclause=inclause.slice(0, -1);
-				console.log("> Retrieving the package of playlist : "+inclause);
-				var command = "SELECT broadcasts.id,broadcasts.version, broadcasts.name, broadcasts.datefrom, broadcasts.dateto , medias.ftplink FROM broadcasts JOIN broadcast_media ON broadcast_media.id_broadcast = broadcasts.id JOIN medias ON medias.id = broadcast_media.id_media WHERE broadcast_media.selected = true AND broadcasts.id  IN ("+inclause+")";
-				client.query(command, function(err, resultBroadcast) {
-				//call `done()` to release the client back to the pool
-				done();
-				if(err) {
-				  return console.error('> Error getting the main playlist', err);
-				}else{
-					var myJson = {'name':'value'};
-					// Reorganize the JSON to make it simplified
-					var temp = resultBroadcast.rows.slice();
-					var broadcasts = [];
-					var previousId=-1;
-					console.log("size  "+ resultBroadcast.rows.length );
-					for(var i=0; i < resultBroadcast.rows.length ; i++){
-						var id = resultBroadcast.rows[i].id;
-						// ignore repetitive lines
-						if (previousId == id){
-							delete resultBroadcast.rows[i]; 
-						}else{
-							previousId = id;
-							//console.log("reading id: "+id);
-							var mediaarray=[];
-							for(var j=0; j < temp.length ; j++){
-								if (temp[j].id == id){
-									mediaarray.push(temp[j].ftplink);
-								}
-							}
-							resultBroadcast.rows[i].medias = mediaarray;
-							broadcasts.push(resultBroadcast.rows[i]);
-						}
-						
-					}
-						
-					
-					res.send(broadcasts);
-					
-					command = "UPDATE broadcast_devices SET updated=true WHERE id_broadcast IN ("+inclause+")";
-					client.query(command, function(err, result) {
+				
+				 client.query("SELECT id_broadcast,updated FROM broadcast_devices INNER JOIN devices ON broadcast_devices.id_device = devices.id WHERE (devices.name=($1) AND broadcast_devices.updated = false AND (SELECT broadcasts.broadcasted FROM broadcasts WHERE broadcasts.id = broadcast_devices.id_broadcast) = true)",[name], function(err, result) {
 					done();
 					if(err) {
-						return console.error('> Error updating the broadcasted status update', err);
+					  return console.error('> Error getting the playlists', err);
+					}
+					// Generate a playlist and send it to the player
+					// Generate the IN clause string
+					var inclause="";	
+					for (var i = 0; i < result.rows.length ; i++){
+						inclause += result.rows[i].id_broadcast+",";
+					}
+					inclause=inclause.slice(0, -1);
+					console.log("> Retrieving the package of playlist : "+inclause);
+					var command = "SELECT broadcasts.id,broadcasts.version, broadcasts.name, broadcasts.datefrom, broadcasts.dateto , medias.ftplink FROM broadcasts JOIN broadcast_media ON broadcast_media.id_broadcast = broadcasts.id JOIN medias ON medias.id = broadcast_media.id_media WHERE broadcast_media.selected = true AND broadcasts.id  IN ("+inclause+")";
+					client.query(command, function(err, resultBroadcast) {
+					//call `done()` to release the client back to the pool
+					done();
+					if(err) {
+					  return console.error('> Error getting the main playlist', err);
+					}else{
+						var myJson = {'name':'value'};
+						// Reorganize the JSON to make it simplified
+						var temp = resultBroadcast.rows.slice();
+						var broadcasts = [];
+						var previousId=-1;
+						console.log("size  "+ resultBroadcast.rows.length );
+						for(var i=0; i < resultBroadcast.rows.length ; i++){
+							var id = resultBroadcast.rows[i].id;
+							// ignore repetitive lines
+							if (previousId == id){
+								delete resultBroadcast.rows[i]; 
+							}else{
+								previousId = id;
+								//console.log("reading id: "+id);
+								var mediaarray=[];
+								for(var j=0; j < temp.length ; j++){
+									if (temp[j].id == id){
+										mediaarray.push(temp[j].ftplink);
+									}
+								}
+								resultBroadcast.rows[i].medias = mediaarray;
+								broadcasts.push(resultBroadcast.rows[i]);
+							}
+							
+						}
+							
+						
+						res.send(broadcasts);
+						
+						command = "UPDATE broadcast_devices SET updated=true WHERE id_broadcast IN ("+inclause+")";
+						client.query(command, function(err, result) {
+						done();
+						if(err) {
+							return console.error('> Error updating the broadcasted status update', err);
+						}
+						});
+						
 					}
 					});
-					
+				  });
 				}
-				});
-			}
 			});
 		}
 	});	
