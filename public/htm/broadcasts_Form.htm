@@ -14,16 +14,30 @@
 <div>
 <div>&nbsp;</div>
 
+
 <div ng-show="tab2" >
 
 <table class="table table-striped">
   <thead><tr>
     <th>Name</th>
-    <th class="hidden-xs">Progress</th>
+	<th class="hidden-xs">Status</th>
+    <th>Media progress</th>
   </tr></thead>
   <tbody><tr ng-repeat="device in devices">
-   <td>
+    <td>
 	  <button class="btn disabled" >{{ device.name }}-{{ device.description }}</button>
+	</td>
+	<td class="hidden-xs">
+	  <div class="btn-group" uib-dropdown>
+		<button class="btn btn-primary" uib-dropdown-toggle>
+		 {{ dateTest | date:'yyyy-MMM-dd HH:mm' }} - playlist downloaded <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="btn-append-to-single-button">
+		  <li role="menuitem"><a href="#">{{ dateTest | date:'yyyy-MMM-dd HH:mm' }} - playlist 21 downloaded ------------ </a></li>
+		  <li role="menuitem"><a href="#">{{ dateTest | date:'yyyy-MMM-dd HH:mm' }} - playlist 21 downloaded ------------</a></li>
+		
+		</ul>
+	  </div>
 	</td>
 	<td>
 	  <button class="btn btn-info btn-block" >{{ device.id_device }}</button>
@@ -31,6 +45,7 @@
    </tbody>
 </table>
 </div>
+
 
 <div ng-show="tab1">
 <form class="form-horizontal">

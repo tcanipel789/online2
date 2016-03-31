@@ -29,6 +29,7 @@ $scope.tabGI = function(){
 	}
 }
 $scope.tabDevices = function(){
+	$scope.dateTest= new Date();
 	if ($scope.tab2 == false){
 		$scope.getPlayers();
 		$scope.tab1 = false;
