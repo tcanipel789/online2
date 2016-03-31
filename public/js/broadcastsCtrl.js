@@ -7,15 +7,35 @@ $scope.incomplete = false;
 $scope.listVisible = true;
 $scope.stylereload = "glyphicon glyphicon-refresh";
 $scope.styleremove = "glyphicon glyphicon-remove";
+$scope.styleTabDevices = "";
 $scope.isTansferVisible = true;
 $scope.isTansferVisibleMedia = true;
 $scope.fromvisible=false;
 $scope.tovisible=false;
 $scope.dailyfromvisible=false;
 $scope.dailytovisible=false;
+$scope.tab1=true;
+$scope.tab2=false;
+$scope.owner=0;
 
 $scope.tags='';
 $scope.medias='';
+
+
+$scope.tabGI = function(){
+	if ($scope.tab1 == false){
+		$scope.tab1 = true;
+		$scope.tab2 = false;
+	}
+}
+$scope.tabDevices = function(){
+	if ($scope.tab2 == false){
+		$scope.getPlayers();
+		$scope.tab1 = false;
+		$scope.tab2 = true;
+	}
+}
+
 
 $scope.showDailyTo = function(){
 	if ($scope.dailytovisible){
@@ -102,6 +122,19 @@ $scope.getTags = function() {
 	  });
   }
 };
+$scope.getPlayers = function() {
+  $scope.styleTabDevices = "glyphicon glyphicon-transfer";
+  if ($scope.broadcastVisible == true ){
+	$http.get('/online/broadcasts/'+$scope.id+'/playerCount').
+	  success(function(data, status, headers, config) {
+		$scope.devices = data;
+		$scope.styleTabDevices = "";
+	  }).
+	  error(function(data, status, headers, config) {
+	   console.log("error when retrieving the number of players link to this broadcast");
+	  });
+  }
+};
 
 $scope.reload = function() {
 	if ($scope.broadcastVisible == true){
@@ -167,6 +200,7 @@ $scope.editBroadcast = function(id) {
 	
 	$scope.getTags();
 	$scope.getMedias();
+
 
 };
 

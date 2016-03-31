@@ -247,6 +247,30 @@ app.get("/online/broadcasts",function(req,res){
 });
 
 /*
+GET FUNCTION : send the number of player linked to this broadcast
+*/
+app.get("/online/broadcasts/:ID/playerCount",function(req,res){
+	console.log("GET >  checking how many players are registered under this broadcasts "+req.params.ID);
+	var data = req.body;
+	var id = req.params.ID;
+
+    // Get a Postgres client from the connection pool
+    pg.connect(connectionString, function(err, client, done) {
+		if (client != null){
+		    client.query("SELECT name FROM devices WHERE (id iN(SELECT id_device FROM broadcast_devices WHERE id_broadcast=($1)));",[id], function(err, result) {
+			//call `done()` to release the client back to the pool
+			done();
+			if(err) {
+			  return console.error('> Error running broadcasts update', err);
+			}
+			
+			return res.json(result.rows);
+		});
+			
+    }});
+});
+
+/*
 POST FUNCTION : REMOVE a broadcast an dependencies to devices from the list
 */
 app.post("/online/broadcasts/r/",function(req,res){

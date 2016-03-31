@@ -2,6 +2,37 @@
 <hr>
 
 <h3>Broadcast: {{name}}</h3>
+
+<div>
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li  ng-class="tab1 ? 'active' : ''" ng-click="tabGI()"><a>General information</a></li>
+    <li  ng-class="tab2 ? 'active' : ''"  ng-click="tabDevices()"><a>Devices <span ng-class="styleTabDevices"></span></a></li>
+  </ul>
+  
+<div>
+<div>&nbsp;</div>
+
+<div ng-show="tab2" >
+
+<table class="table table-striped">
+  <thead><tr>
+    <th>Name</th>
+    <th class="hidden-xs">Progress</th>
+  </tr></thead>
+  <tbody><tr ng-repeat="device in devices">
+   <td>
+	  <button class="btn disabled" >{{ device.name }}</button>
+	</td>
+	<td>
+	  <button class="btn btn-info btn-block" >{{ device.id_device }}</button>
+	</td>
+   </tbody>
+</table>
+</div>
+
+<div ng-show="tab1">
 <form class="form-horizontal">
 <div class="form-group">
   <label class="col-sm-2 control-label">Name :</label>
@@ -47,7 +78,7 @@
 <div class="form-group" ng-show="tagVisible">
 <div class="panel panel-default  col-sm-offset-2">
   <div class="panel-heading">Profiling Tags {{tagerror}}</div>
-  <div class="panel-body"> 
+  <div class="panel-body">
 <label ng-repeat="tag in tags">
   &nbsp;<button class="btn"
     ng-class="tag.selected ? 'btn-warning' : 'btn-default'"
@@ -97,7 +128,7 @@
 	</div>
 </div>
 </form>
-
+</div>
 
 <br/><hr/>
 </div>
