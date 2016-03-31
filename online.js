@@ -290,7 +290,32 @@ app.get("/online/:DEVICE/events",function(req,res){
 		});	
     }});
 });
-
+/*
+POST FUNCTION : ADD AN EVENT
+*/
+app.post('/online/:DEVICE/event', function(req, res) {
+	var data = req.body;
+	var name = data.string.name || null;
+	var type = data.string.type || null;
+	var event = data.string.type || null;
+	var broadcast = data.string.type || null;
+	var date = new Date().toISOString();
+    
+	if( name != null){
+	pg.connect(connectionString, function(err, client, done) {
+		if (client != null){
+			console.log("> adding a new event from "+ name);
+				client.query("INSERT INTO events (device_name,type,event,broadcast,date)VALUES ($1,$2,$3,$4)", [name,type,event,broadcast,date], function(err, result){
+				done();
+					if(err) {
+					  return console.error('> Error running adding event, err);
+					}
+				}
+		}
+	}
+	}
+	
+}
 /*
 POST FUNCTION : REMOVE a broadcast an dependencies to devices from the list
 */
