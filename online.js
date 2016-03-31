@@ -257,7 +257,7 @@ app.get("/online/broadcasts/:ID/playerCount",function(req,res){
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
-		    client.query("SELECT name FROM devices WHERE (id iN(SELECT id_device FROM broadcast_devices WHERE id_broadcast=($1)));",[id], function(err, result) {
+		    client.query("SELECT name,description FROM devices WHERE (id iN(SELECT id_device FROM broadcast_devices WHERE id_broadcast=($1)));",[id], function(err, result) {
 			//call `done()` to release the client back to the pool
 			done();
 			if(err) {
