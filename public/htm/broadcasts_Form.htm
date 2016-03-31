@@ -25,8 +25,7 @@
   </tr></thead>
   <tbody><tr ng-repeat="device in devices">
     <td>
-	  <button class="btn disabled" >{{ device.name }}-{{ device.description }}</button>
-	</td>
+	  <button popover-animation="true" popover-trigger="mouseenter"  uib-popover="{{ device.description }}" type="button" class="btn">{{ device.name }}</button></td>
 	<td class="hidden-xs">
 	  <div class="btn-group" uib-dropdown>
 		<button class="btn btn-primary" uib-dropdown-toggle>
