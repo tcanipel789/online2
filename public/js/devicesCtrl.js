@@ -92,10 +92,10 @@ $scope.editDevice = function(id) {
 	}
 
 	$scope.edit = false;
-	$scope.status = 'online';
 	$scope.name = $scope.devices[index].name;
 	$scope.temperature = $scope.devices[index].temperature;
 	$scope.lastseen = $scope.devices[index].lastseen;
+	$scope.status = $scope.detectLabel($scope.lastseen);
 	$scope.created = $scope.devices[index].created;
 	$scope.localip = $scope.devices[index].localip;
 	$scope.description =  $scope.devices[index].description;
