@@ -308,7 +308,7 @@ app.post('/online/:DEVICE/event', function(req, res) {
 				client.query("INSERT INTO events (device_name,type,event,broadcast,date)VALUES ($1,$2,$3,$4)", [name,type,event,broadcast,date], function(err, result){
 				done();
 					if(err) {
-					  return console.error('> Error running adding event, err);
+					  return console.error('> Error running adding event, err');
 					}
 				}
 		}
