@@ -137,6 +137,22 @@ $scope.getPlayers = function() {
   }
 };
 
+
+$scope.getEvents = function(playerName) {
+  $scope.events = null;
+  $scope.styleTabDevices = "glyphicon glyphicon-transfer";
+  if ($scope.broadcastVisible == true ){
+	$http.get('/online/'+playerName+'/events').
+	  success(function(data, status, headers, config) {
+		$scope.events = data;
+		$scope.styleTabDevices = "";
+	  }).
+	  error(function(data, status, headers, config) {
+	   console.log("error when retrieving the number of players link to this broadcast");
+	  });
+  }
+};
+
 $scope.reload = function() {
 	if ($scope.broadcastVisible == true){
 		$scope.stylereload = "glyphicon glyphicon-transfer";

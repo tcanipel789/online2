@@ -29,13 +29,11 @@
 	  <button popover-animation="true" popover-trigger="mouseenter"  uib-popover="{{ device.description }}" type="button" class="btn btn-default">{{ device.name }}</button></td>
 	<td class="hidden-xs">
 	  <div class="btn-group" uib-dropdown>
-		<button class="btn btn-primary" uib-dropdown-toggle>
-		 {{ dateTest | date:'yyyy-MMM-dd HH:mm' }} - playlist downloaded <span class="caret"></span>
+		<button class="btn btn-primary" uib-dropdown-toggle ng-click="getEvents(device.name)">
+		 click to see to last 10 events  <span class="caret"></span>
 		</button>
-		<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="btn-append-to-single-button">
-		  <li role="menuitem"><a href="#">{{ dateTest | date:'yyyy-MMM-dd HH:mm' }} - playlist 21 downloaded ------------ </a></li>
-		  <li role="menuitem"><a href="#">{{ dateTest | date:'yyyy-MMM-dd HH:mm' }} - playlist 21 downloaded ------------</a></li>
-		
+		<ul class="dropdown-menu"  uib-dropdown-menu aria-labelledby="btn-append-to-single-button">
+		  <li ng-repeat="event in events"><a href="#">{{event.date}} - {{ event.event }}</a></li>	
 		</ul>
 	  </div>
 	</td>

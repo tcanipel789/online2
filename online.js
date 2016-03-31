@@ -250,7 +250,7 @@ app.get("/online/broadcasts",function(req,res){
 GET FUNCTION : send the number of player linked to this broadcast
 */
 app.get("/online/broadcasts/:ID/playerCount",function(req,res){
-	console.log("GET >  checking how many players are registered under this broadcasts "+req.params.ID);
+	console.log("GET >  checking how many devices are registered under this broadcasts "+req.params.ID);
 	var data = req.body;
 	var id = req.params.ID;
 
@@ -265,8 +265,29 @@ app.get("/online/broadcasts/:ID/playerCount",function(req,res){
 			}
 			
 			return res.json(result.rows);
-		});
+		});	
+    }});
+});
+/*
+GET FUNCTION : send the number of player linked to this broadcast
+*/
+app.get("/online/:DEVICE/events",function(req,res){
+	console.log("GET > the device "+req.params.DEVICE+" is requesting last events");
+	var data = req.body;
+	var name = req.params.DEVICE;
+
+    // Get a Postgres client from the connection pool
+    pg.connect(connectionString, function(err, client, done) {
+		if (client != null){
+		    client.query("SELECT date,event,type,broadcast FROM events WHERE (device_name=($1));",[name], function(err, result) {
+			//call `done()` to release the client back to the pool
+			done();
+			if(err) {
+			  return console.error('> Error running broadcasts update', err);
+			}
 			
+			return res.json(result.rows);
+		});	
     }});
 });
 
