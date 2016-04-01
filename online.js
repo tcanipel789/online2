@@ -271,15 +271,16 @@ app.get("/online/broadcasts/:ID/playerCount",function(req,res){
 /*
 GET FUNCTION : send the number of player linked to this broadcast
 */
-app.get("/online/:DEVICE/events",function(req,res){
-	console.log("GET > the device "+req.params.DEVICE+" is requesting last events");
+app.get("/online/:DEVICE/events/:BROADCAST",function(req,res){
+	console.log("GET > the device "+req.params.DEVICE+" is requesting last 10 events on "+req.params.BROADCAST);
 	var data = req.body;
 	var name = req.params.DEVICE;
+	var broadcast = req.params.BROADCAST || null;
 
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
-		    client.query("SELECT date,event,type,broadcast FROM events WHERE (device_name=($1));",[name], function(err, result) {
+		    client.query("SELECT date,event,type,broadcast FROM events WHERE (device_name=($1) AND broadcast=$2) ORDER BY id DESC limit 10;",[name,broadcast], function(err, result) {
 			//call `done()` to release the client back to the pool
 			done();
 			if(err) {

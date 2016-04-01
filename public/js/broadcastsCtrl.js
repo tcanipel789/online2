@@ -17,9 +17,11 @@ $scope.dailytovisible=false;
 $scope.tab1=true;
 $scope.tab2=false;
 $scope.owner=0;
+$scope.mediaCount =0;
 
 $scope.tags='';
 $scope.medias='';
+$scope.mediasOriginal='';
 
 
 $scope.tabGI = function(){
@@ -98,6 +100,8 @@ $scope.getMedias = function() {
 	$http.get('/online/broadcasts/'+$scope.id+'/medias').
 	  success(function(data, status, headers, config) {
 		$scope.medias = data;
+		$scope.mediasOriginal = data;
+		$scope.getMediasCount();
 		$scope.isTansferVisibleMedia = false;
 	  }).
 	  error(function(data, status, headers, config) {
@@ -124,6 +128,7 @@ $scope.getTags = function() {
   }
 };
 $scope.getPlayers = function() {
+  $scope.devices = null;
   $scope.styleTabDevices = "glyphicon glyphicon-transfer";
   if ($scope.broadcastVisible == true ){
 	$http.get('/online/broadcasts/'+$scope.id+'/playerCount').
@@ -142,7 +147,7 @@ $scope.getEvents = function(playerName) {
   $scope.events = null;
   $scope.styleTabDevices = "glyphicon glyphicon-transfer";
   if ($scope.broadcastVisible == true ){
-	$http.get('/online/'+playerName+'/events').
+	$http.get('/online/'+playerName+'/events/'+$scope.id).
 	  success(function(data, status, headers, config) {
 		$scope.events = data;
 		$scope.styleTabDevices = "";
@@ -165,6 +170,18 @@ $scope.reload = function() {
 		   console.log("error when retrieving broadcasts");
 		    $scope.stylereload = "glyphicon glyphicon-refresh";
 		  });
+	}
+}
+
+$scope.getMediasCount=function(){
+	$scope.mediaCount=0;
+	var max;
+	for(var i = 0, max = $scope.mediasOriginal.length; i < max; i++)
+	{
+	  if($scope.mediasOriginal[i].selected)
+	  {
+		$scope.mediaCount += 1;
+	  }
 	}
 }
 

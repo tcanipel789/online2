@@ -21,11 +21,7 @@
 	  <button class="btn btn-info btn-block" ng-click="editBroadcast(broadcast.id)" >{{ broadcast.name }}</button>
 	</td>
     <td class="hidden-xs">
-	<div class="progress">
-		<div class="progress-bar" role="progressbar" aria-valuenow="{{ broadcast.progress }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ broadcast.progress }}%;">
-		{{ broadcast.progress }}%
-		</div>
-	</div>
+	<uib-progressbar max="max" value="dynamic"  type="danger"><span style="color:white; white-space:nowrap;">{{broadcast.progress}} %</span></uib-progressbar>
 	</td>
 	<td class="hidden-xs"><button class="btn btn-default disabled btn-block btn-sm" >{{ broadcast.datefrom | date:'yyyy-MMM-dd HH:mm' }}</button></td>
 	<td class="hidden-xs"><button class="btn btn-default disabled btn-block btn-sm" >{{ broadcast.dateto | date:'yyyy-MMM-dd HH:mm' }}</button></td>
