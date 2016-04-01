@@ -11,7 +11,7 @@
 <table class="table table-striped">
   <thead><tr>
     <th>Name</th>
-    <th class="hidden-xs">Progress</th>
+    <!-- <th class="hidden-xs">Progress</th> -->
     <th>From</th>
 	<th>To</th>
 	<th class="text-right"><span  class="label label-default">{{broadcasts.length}}</span></th>
@@ -20,9 +20,9 @@
    <td>
 	  <button class="btn btn-info btn-block" ng-click="editBroadcast(broadcast.id)" >{{ broadcast.name }}</button>
 	</td>
-    <td class="hidden-xs">
+    <!--<td class="hidden-xs">
 	<uib-progressbar max="max" value="dynamic"  type="danger"><span style="color:white; white-space:nowrap;">{{broadcast.progress}} %</span></uib-progressbar>
-	</td>
+	</td>-->
 	<td class="hidden-xs"><button class="btn btn-default disabled btn-block btn-sm" >{{ broadcast.datefrom | date:'yyyy-MMM-dd HH:mm' }}</button></td>
 	<td class="hidden-xs"><button class="btn btn-default disabled btn-block btn-sm" >{{ broadcast.dateto | date:'yyyy-MMM-dd HH:mm' }}</button></td>
 	<td class="visible-xs"><button class="btn btn-default disabled btn-block btn-sm" >{{ broadcast.datefrom | date:'ddMMM' }}</button></td>
