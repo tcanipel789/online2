@@ -520,7 +520,6 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 
 app.get("/online/broadcasts/:PLAYER",function(req,res){
 	console.log("GET >  checking if a new main playlist is available for "+req.params.PLAYER);
-
 	var name = req.params.PLAYER;
 	
 	if (name != ""){
@@ -558,19 +557,17 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 					  return console.error('> Error getting the main playlist', err);
 					}else{
 						var myJson = {'name':'value'};
-						// Reorganize the JSON to make it simplified
+						// Reorganize the JSON to make it simplified (table of medias and not 1 media 1 playlist)
 						var temp = resultBroadcast.rows.slice();
 						var broadcasts = [];
 						var previousId=-1;
+						var ids =[-1];
 						console.log("size  "+ resultBroadcast.rows.length );
 						for(var i=0; i < resultBroadcast.rows.length ; i++){
 							var id = resultBroadcast.rows[i].id;
+
 							// ignore repetitive lines
-							if (previousId == id){
-								delete resultBroadcast.rows[i]; 
-							}else{
-								previousId = id;
-								//console.log("reading id: "+id);
+							if (ids.indexOf(id) == -1){
 								var mediaarray=[];
 								for(var j=0; j < temp.length ; j++){
 									if (temp[j].id == id){
@@ -579,11 +576,11 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 								}
 								resultBroadcast.rows[i].medias = mediaarray;
 								broadcasts.push(resultBroadcast.rows[i]);
+								ids.push(id);
 							}
-							
 						}
 							
-						
+						console.log(broadcasts);
 						res.send(broadcasts);
 						
 						command = "UPDATE broadcast_devices SET updated=true WHERE id_broadcast IN ("+inclause+")";
