@@ -348,7 +348,9 @@ app.post("/online/broadcasts/r/",function(req,res){
 		res.sendStatus(500);
 	}
 });
-
+/*
+POST FUNCTION : UPDATE OR ADD A BROADCAST
+*/
 app.post('/online/broadcasts/:ID', function(req, res) {
 	var data = req.body;
 	
@@ -363,13 +365,13 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 	var broadcasted = data.string.broadcasted;
 	var version = shortid.generate();
 	
-	console.log('POST> the broadcast : '+broadcasted+id+' / '+ name +' is sending information| ');
+	console.log('POST> the broadcast : '+id+' / '+ name +' is sending information| ');
 	
 	
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
-			console.log("> Trying to updating an existing broadcast "+ name);
+			console.log("> Trying to updating an existing broadcast "+ id);
 			
 		    client.query("UPDATE broadcasts SET name=coalesce(($1),name), datefrom=coalesce(($2),datefrom), dateto =coalesce(($3),dateto),owner =coalesce(($4),owner), broadcasted=($5),version=($6) WHERE id=($7)", [name,datefrom,dateto,owner,broadcasted,version,id], function(err, result) {
 			// UPDATE ALL DEPENDANCIES TO TAGS
@@ -417,7 +419,6 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 						}
 					}
 					inclause=inclause.slice(0, -1);
-					
 					// Identify the devices impacted, and reset their status
 					var commandUpdate = "UPDATE broadcast_devices SET updated=false WHERE id_device IN (SELECT devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id IN ("+inclause+")))";
 					client.query(commandUpdate, function(err, result) {
@@ -425,7 +426,7 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 						if(err) {
 							return console.error('> Error running update', err);
 						}else{
-							console.log("Get the distinct devices id that match the group of tags and insert them for id"+ id);
+							console.log("Get the distinct devices id that match the group of tags and insert them for id : "+ id);
 							//Get the distinct devices id that match the group of tags and insert them
 							var command ="INSERT INTO broadcast_devices (id_broadcast,updated,id_device) SELECT DISTINCT CAST( "+id+" as INT),false,devices.id FROM devices INNER JOIN device_tag ON devices.id = device_tag.id_device WHERE (device_tag.selected AND device_tag.id_tag IN ("+inclause+"))";
 							client.query(command, function(err, result) {
@@ -517,7 +518,9 @@ app.post('/online/broadcasts/:ID', function(req, res) {
 		  });
     }});
 });
-
+/*
+GET FUNCTION : SEND THE PROCESSED PLAYLIST TO THE CONCERNED PLAYER
+*/
 app.get("/online/broadcasts/:PLAYER",function(req,res){
 	console.log("GET >  checking if a new main playlist is available for "+req.params.PLAYER);
 	var name = req.params.PLAYER;
@@ -556,7 +559,6 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 					if(err) {
 					  return console.error('> Error getting the main playlist', err);
 					}else{
-						var myJson = {'name':'value'};
 						// Reorganize the JSON to make it simplified (table of medias and not 1 media 1 playlist)
 						var temp = resultBroadcast.rows.slice();
 						var broadcasts = [];
@@ -565,7 +567,6 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 						console.log("size  "+ resultBroadcast.rows.length );
 						for(var i=0; i < resultBroadcast.rows.length ; i++){
 							var id = resultBroadcast.rows[i].id;
-
 							// ignore repetitive lines
 							if (ids.indexOf(id) == -1){
 								var mediaarray=[];
@@ -579,8 +580,7 @@ app.get("/online/broadcasts/:PLAYER",function(req,res){
 								ids.push(id);
 							}
 						}
-							
-						console.log(broadcasts);
+					
 						res.send(broadcasts);
 						
 						command = "UPDATE broadcast_devices SET updated=true WHERE id_broadcast IN ("+inclause+")";
