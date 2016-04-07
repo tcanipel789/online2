@@ -34,7 +34,7 @@ $scope.reload = function() {
 	if ($scope.mediaVisible == true){
 	$scope.stylereload = "glyphicon glyphicon-transfer";
 	
-	$http.get('/online/medias').
+	$http.get(app.server+'online/medias').
 	  success(function(data, status, headers, config) {
 		$scope.medias = data;
 		$scope.stylereload = "glyphicon glyphicon-refresh";
@@ -50,7 +50,7 @@ $scope.reload = function() {
 
 $scope.getTypes= function() {
   if ($scope.mediaVisible == true ){
-	$http.get('/online/medias/types').
+	$http.get(app.server+'online/medias/types').
 	  success(function(data, status, headers, config) {
 		$scope.types = data;
 	  }).
@@ -135,7 +135,7 @@ $scope.save = function() {
 	
 	var data = {string: {id: $scope.id , name: $scope.name , ftplink: $scope.ftplink, tags: $scope.tags , type: $scope.type}};
 	$scope.styleSave="glyphicon glyphicon-transfer";
-	$http.post('/online/medias/'+$scope.name, data).
+	$http.post(app.server+'online/medias/'+$scope.name, data).
 	  then(function(response) {
 		if (response.status == 200){
 			$scope.styleSave="glyphicon glyphicon-save";
@@ -153,7 +153,7 @@ $scope.save = function() {
 $scope.removeMedia = function(idMedia,media) {
 	media.removing=true;
 	var data = {string: {id: idMedia }};
-	$http.post('/online/medias/r/', data).
+	$http.post(app.server+'online/medias/r/', data).
 	  then(function(response) {
 		if (response.status == 200){
 			$scope.reload(); // refresh the list

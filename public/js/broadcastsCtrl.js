@@ -97,7 +97,7 @@ $scope.toggleSelection = function(obj){
 $scope.getMedias = function() {
   $scope.isTansferVisibleMedia = true;
   if ($scope.broadcastVisible == true ){
-	$http.get('/online/broadcasts/'+$scope.id+'/medias').
+	$http.get(app.server+'online/broadcasts/'+$scope.id+'/medias').
 	  success(function(data, status, headers, config) {
 		$scope.medias = data;
 		$scope.mediasOriginal = data;
@@ -115,7 +115,7 @@ $scope.getMedias = function() {
 $scope.getTags = function() {
   $scope.isTansferVisible = true;
   if ($scope.broadcastVisible == true ){
-	$http.get('/online/broadcasts/'+$scope.id+'/tags').
+	$http.get(app.server+'online/broadcasts/'+$scope.id+'/tags').
 	  success(function(data, status, headers, config) {
 		$scope.tags = data;
 		$scope.isTansferVisible = false;
@@ -131,7 +131,7 @@ $scope.getPlayers = function() {
   $scope.devices = null;
   $scope.styleTabDevices = "glyphicon glyphicon-transfer";
   if ($scope.broadcastVisible == true ){
-	$http.get('/online/broadcasts/'+$scope.id+'/playerCount').
+	$http.get(app.server+'online/broadcasts/'+$scope.id+'/playerCount').
 	  success(function(data, status, headers, config) {
 		$scope.devices = data;
 		$scope.styleTabDevices = "";
@@ -147,7 +147,7 @@ $scope.getEvents = function(playerName) {
   $scope.events = null;
   $scope.styleTabDevices = "glyphicon glyphicon-transfer";
   if ($scope.broadcastVisible == true ){
-	$http.get('/online/'+playerName+'/events/'+$scope.id).
+	$http.get(app.server+'online/'+playerName+'/events/'+$scope.id).
 	  success(function(data, status, headers, config) {
 		$scope.events = data;
 		$scope.styleTabDevices = "";
@@ -161,7 +161,7 @@ $scope.getEvents = function(playerName) {
 $scope.reload = function() {
 	if ($scope.broadcastVisible == true){
 		$scope.stylereload = "glyphicon glyphicon-transfer";
-		$http.get('/online/broadcasts').
+		$http.get(app.server+'online/broadcasts').
 		  success(function(data, status, headers, config) {
 			$scope.broadcasts = data;
 			$scope.stylereload = "glyphicon glyphicon-refresh";
@@ -196,7 +196,7 @@ $scope.activateBroadcast= function(id,value,broad){
 	$scope.medias = null;
 	$scope.broadcasted = !value;
 	
-	$http.get('/online/broadcasts/'+$scope.id+'/tags').
+	$http.get(app.server+'online/broadcasts/'+$scope.id+'/tags').
 	  success(function(data, status, headers, config) {
 		$scope.tags = data;
 		$scope.save();
@@ -272,7 +272,7 @@ $scope.save = function() {
 	var data = {string: {id: $scope.id , name : $scope.name, datefrom: $scope.datefrom, dateto:$scope.dateto , owner: $scope.owner, tags: $scope.tags, medias: $scope.medias, broadcasted : $scope.broadcasted}};
 	
 	$scope.styleSave="glyphicon glyphicon-transfer";
-	$http.post('/online/broadcasts/brd', data).
+	$http.post(app.server+'online/broadcasts/brd', data).
 	  then(function(response) {
 		if (response.status == 200){
 			$scope.styleSave="glyphicon glyphicon-save";
@@ -291,7 +291,7 @@ $scope.save = function() {
 $scope.removeBroadcast = function(idBroadcast,broadcast) {
 	broadcast.removing = true;
 	var data = {string: {id: idBroadcast }};
-	$http.post('/online/broadcasts/r/', data).
+	$http.post(app.server+'online/broadcasts/r/', data).
 	  then(function(response) {
 		if (response.status == 200){
 			$scope.reload(); // refresh the list
