@@ -227,6 +227,7 @@ $scope.editBroadcast = function(id) {
 	$scope.datefrom = $scope.broadcasts[index].datefrom;
 	$scope.dateto = $scope.broadcasts[index].dateto;
 	$scope.created = $scope.broadcasts[index].created;
+	$scope.version = $scope.broadcasts[index].version;
 	$scope.broadcasted = false;
 	$scope.id = id;
 	$scope.tags=[];
