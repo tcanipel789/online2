@@ -47,7 +47,9 @@ $scope.reload = function() {
 	if ($scope.playerVisible == true){
 	$scope.stylereload = "glyphicon glyphicon-transfer";
 	
-	$http.get('/online/devices').
+	console.log(app.server+'online/devices');
+	
+	$http.get(app.server+'online/devices').
 	  success(function(data, status, headers, config) {
 		$scope.devices = data;
 		$scope.stylereload = "glyphicon glyphicon-refresh";
