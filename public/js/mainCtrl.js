@@ -7,6 +7,7 @@ app.controller('mainCtrl', function($scope, $http) {
  $scope.broadcastVisible = false;
  $scope.programVisible = false;
 
+ $scope.version=app.version;
  
  $scope.player = function(){
 	$scope.playerVisible = true;
