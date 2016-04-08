@@ -65,7 +65,7 @@ $scope.reload = function() {
 $scope.getDevicesTags = function() {
 	$scope.isTansferVisible = true;
   if ($scope.playerVisible == true ){
-	$http.get(app.server+'/online/devices/'+$scope.id+'/tags').
+	$http.get(app.server+'online/devices/'+$scope.id+'/tags').
 	  success(function(data, status, headers, config) {
 		$scope.tags = data;
 		$scope.isTansferVisible = false;
@@ -116,7 +116,7 @@ $scope.save = function() {
 	var deviceData = {string: {name: $scope.name , description: $scope.description, owner: $scope.owner , tags: $scope.tags , id: $scope.id}};
 	var jsonDevice = JSON.stringify(deviceData);
 	$scope.styleSave="glyphicon glyphicon-transfer";
-	$http.post(app.server+'/online/devices/'+$scope.name, deviceData).
+	$http.post(app.server+'online/devices/'+$scope.name, deviceData).
 	  then(function(response) {
 		if (response.status == 200){
 			$scope.styleSave="glyphicon glyphicon-save";
@@ -143,7 +143,7 @@ $scope.addTag = function() {
 	var deviceData = {string: {name: $scope.newtag}};
 	var jsonDevice = JSON.stringify(deviceData);
 	$scope.statusSavingTag=true;
-	$http.post(app.server+'/online/devices/tag/newtag/'+$scope.id,deviceData).
+	$http.post(app.server+'online/devices/tag/newtag/'+$scope.id,deviceData).
 	  then(function(response) {
 		if (response.status == 200){
 			$scope.statusSavingTag=false;
