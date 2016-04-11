@@ -12,12 +12,19 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(express.static('public'));
 
 var connectionString = process.env.HEROKU_POSTGRESQL_COPPER_URL || 'postgres://fhaffwscrcrbqk:szPm6qahfBVt9caoCT9LspKavB@ec2-54-197-241-24.compute-1.amazonaws.com:5432/d59390etfcghc7?ssl=true';
-//update the media list and store it in the database
-var connectionProperties = {host: "online.royalwebhosting.net",user: "1942016",password: "hellmaster"};
+
+
 
 app.get("/online",function(req,res){
 	res.sendfile("./public/index.html");
 });
+
+
+app.get('/download', function(req, res){
+  var file = __dirname + '/public/videos/test.h264';
+  res.download(file); // Set disposition and send it.
+});
+
 
 app.get("/kakao",function(req,res){
 	res.sendfile("./public/htm/kakaotalkshare.htm");
