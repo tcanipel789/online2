@@ -16,7 +16,7 @@ var connectionString = process.env.HEROKU_POSTGRESQL_COPPER_URL || 'postgres://f
 var connectionProperties = {host: "online.royalwebhosting.net",user: "1942016",password: "hellmaster"};
 
 app.get("/online",function(req,res){
-	res.sendfile("./public/online.html");
+	res.sendfile("./public/index.html");
 });
 
 app.get("/kakao",function(req,res){
