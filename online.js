@@ -316,16 +316,16 @@ app.post('/online/:DEVICE/event', function(req, res) {
 		pg.connect(connectionString, function(err, client, done) {
 			if (client != null){
 				console.log("> adding a new event from "+ name);
-					client.query("INSERT INTO events (device_name,type,event,broadcast,date,media)VALUES ($1,$2,$3,$4,$5)", [name,type,event,broadcast,date,media], function(err, result){
+					client.query("INSERT INTO events (device_name,type,event,broadcast,date,media)VALUES ($1,$2,$3,$4,$5,$6)", [name,type,event,broadcast,date,media], function(err, result){
 					done();
 						if(err) {
 						  return console.error('> Error running add event ', err);
 						}
+					res.sendStatus(200);
 					})
 			}
 		})
 	}
-	
 });
 /*
 POST FUNCTION : REMOVE a broadcast an dependencies to devices from the list

@@ -87,7 +87,7 @@ download(server+"/download", "test.h264", function(res,err,msg){
 			eventData.type = "media-data";
 			eventData.event = msg;
 			var jsonEvent = JSON.stringify(eventData);
-			httpPost(jsonEvent,'/online/'+_mac+'/event');
+			//httpPost(jsonEvent,'/online/'+_mac+'/event');
 		}
 		if( res == 3){
 			console.log("waiting a slot on the server ");
@@ -143,7 +143,8 @@ download(server+"/download", "test.h264", function(res,err,msg){
 /*
 /  Main function to be call whenever sending Json to the server
 */
-var serverIp   = 'arcane-oasis-9800.herokuapp.com';
+//var serverIp   = 'arcane-oasis-9800.herokuapp.com';
+var serverIp   = '192.168.201.112';
 function httpPost(codestring, path) {
 	
 	// Build the post string from an object
@@ -151,7 +152,7 @@ function httpPost(codestring, path) {
 	// An object of options to indicate where to post to
 	var post_options = {
 	  host: serverIp,
-	  //port: serverPortSSL,
+	  port: 5000,
 	  path: path,
 	  method: 'POST',
 	  headers: {
