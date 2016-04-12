@@ -38,7 +38,7 @@
 	  </div>
 	</td>
 	<td>
-	 <uib-progressbar type="success" max="mediaCount" value="mediaCount" class="progress-striped active"><span style="color:white; white-space:nowrap;"> {{mediaCount}} /  {{mediaCount}}</span></uib-progressbar>
+	 <uib-progressbar ng-repeat="media in device.medias" type="success" max="100" value="media.value" class="progress-striped active"><span style="color:white; white-space:nowrap;"> {{media.name}}</span></uib-progressbar>
 	</td>
    </tbody>
 </table>

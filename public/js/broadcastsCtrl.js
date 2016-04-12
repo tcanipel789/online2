@@ -101,7 +101,6 @@ $scope.getMedias = function() {
 	  success(function(data, status, headers, config) {
 		$scope.medias = data;
 		$scope.mediasOriginal = data;
-		$scope.getMediasCount();
 		$scope.isTansferVisibleMedia = false;
 	  }).
 	  error(function(data, status, headers, config) {
@@ -134,6 +133,10 @@ $scope.getPlayers = function() {
 	$http.get(app.server+'online/broadcasts/'+$scope.id+'/playerCount').
 	  success(function(data, status, headers, config) {
 		$scope.devices = data;
+		var max;
+		for(var i = 0, max = $scope.devices.length; i < max; i++){
+			 $scope.devices[i].medias = $scope.initMediasPerDevice();
+		}
 		$scope.styleTabDevices = "";
 	  }).
 	  error(function(data, status, headers, config) {
@@ -173,16 +176,18 @@ $scope.reload = function() {
 	}
 }
 
-$scope.getMediasCount=function(){
+$scope.initMediasPerDevice=function(){
 	$scope.mediaCount=0;
 	var max;
+	var medias=[];
 	for(var i = 0, max = $scope.mediasOriginal.length; i < max; i++)
 	{
 	  if($scope.mediasOriginal[i].selected)
 	  {
-		$scope.mediaCount += 1;
+		medias.push($scope.mediasOriginal[i]);
 	  }
 	}
+	return medias;
 }
 
 $scope.activateBroadcast= function(id,value,broad){
