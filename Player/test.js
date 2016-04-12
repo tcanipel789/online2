@@ -33,18 +33,18 @@ var download = function(url, dest, cb) {
 	response.pipe(file);
 	var marker=[0,0,0,0,0,0,0,0,0,0];
 	var limitd = 0;
-	var limitu = 1;
+	var limitu = 9;
 	var ind = 0;
 	response.on('data', function() {
 		try {
         var stats = fs.statSync(dest);
 		//Convert the file size to megabytes
 		var fileSizeInMegabytes = stats.size / 1000000.0;
-		var done = (fileSizeInMegabytes / _size) * 100;
-		// send event cause the download start
+		var done = Math.round((fileSizeInMegabytes / _size) * 100);
+		// send events of download every 10%
 		if (done > limitd && done < limitu){
 			if(marker[ind] == 0){
-				if (cb) cb(2,null,fileSizeInMegabytes); 
+				if (cb) cb(2,null,limitd); 
 				marker[ind] = 1;
 				limitd+=10;
 				limitu+=10;
@@ -75,6 +75,14 @@ var download = function(url, dest, cb) {
     fs.unlink(dest); // Delete the file async. (But we don't check the result)
     if (cb) cb(null,err.message);
   });
+  
+  request.setTimeout( 10000, function( ) {
+	 try{
+		 fs.unlink(dest); // Delete the file async. (But we don't check the result)
+	 }catch(err){}
+     console.log("=> lost connection to server");
+	 request.abort();
+  });
 };
 
 var _mac = "b827eb11711";
@@ -83,19 +91,17 @@ var _size = "1"; // in Mo
 
 download(server+"/download", "test.h264", function(res,err,msg){
 	var eventData =  {name: _mac, type: "media", event: "-",media: _media};
-	var marker1=0;
     if(res){
 		if( res == 1){
-			console.log("download finished event");
-				eventData.event = "finished";
-				var jsonEvent = JSON.stringify(eventData);
-				httpPost(jsonEvent,'/online/'+_mac+'/event');
 			try {
 				var stats = fs.statSync(msg);
-				console.log("Total file size: "+stats.size);
+				console.log("download finished ,total file size: "+stats.size);
+				eventData.type = "media-data";
+				eventData.event = 100;
+				var jsonEvent = JSON.stringify(eventData);
+				httpPost(jsonEvent,'/online/'+_mac+'/event');
 			}
 			catch (err) {
-				console.log("-- fatal error --");
 			}
 		}
 		if( res == 2){
@@ -128,7 +134,6 @@ download(server+"/download", "test.h264", function(res,err,msg){
 /  Main function to be call whenever sending Json to the server
 */
 var serverIp   = 'arcane-oasis-9800.herokuapp.com';
-//var serverIp   = '192.168.201.112';
 function httpPost(codestring, path) {
 	
 	// Build the post string from an object
@@ -136,7 +141,6 @@ function httpPost(codestring, path) {
 	// An object of options to indicate where to post to
 	var post_options = {
 	  host: serverIp,
-	  //port: 5000,
 	  path: path,
 	  method: 'POST',
 	  headers: {
@@ -148,8 +152,11 @@ function httpPost(codestring, path) {
 		 //console.log('>HTTP STATUS: ' + res.statusCode);
 	});
 	post_req.on('error', function(e) {
-		console.error("=> Error when posting device information on the server : " + e);
+		console.error("=> Error when posting event : " + e);
 	});
+	post_req.setTimeout( 10000, function( ) {
+	 post_req.abort();
+    });
 	// post the data
 	post_req.write(post_data);
 	post_req.end();
