@@ -29,7 +29,6 @@ var updatePlaylist = function(){
 */
 var download = function(url, dest, cb) {
   var file = fs.createWriteStream(dest);
-  
   var request = http.get(url, function(response) {
 	response.pipe(file);
 	response.on('data', function() {
@@ -46,6 +45,7 @@ var download = function(url, dest, cb) {
     });
 	if (response.statusCode == 202){
 		cb(3);
+		return; // do not return a finish event
 	}
 	response.on('error', function() {
 		if (cb) cb(null,err.message);
@@ -77,6 +77,7 @@ download(server+"/download", "test.h264", function(res,err,msg){
 		}
 		if( res == 2)
 			console.log("downloading event : "+msg);
+		
 		if( res == 3)
 			console.log("waiting a slot on the server ");
 	}

@@ -22,7 +22,6 @@ app.get("/online",function(req,res){
 
 app.get('/download', function(req, res){
   var file = __dirname + '/public/videos/test.h264';
-  res.sendStatus(202);
   res.download(file,'',function(err){
   }); // Set disposition and send it.
 });
