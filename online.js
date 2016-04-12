@@ -289,7 +289,7 @@ app.get("/online/:DEVICE/events/:BROADCAST",function(req,res){
     pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
 			//SELECT date,event,type,broadcast FROM events WHERE (device_name=($1) AND broadcast=$2) ORDER BY id DESC limit 10;
-		    client.query("SELECT date,event,type,broadcast FROM events WHERE (device_name=($1)) ORDER BY id DESC limit 10;",[name,broadcast], function(err, result) {
+		    client.query("SELECT date,event,type,broadcast FROM events WHERE (device_name=($1)) ORDER BY id DESC limit 10;",[name], function(err, result) {
 			//call `done()` to release the client back to the pool
 			done();
 			if(err) {
