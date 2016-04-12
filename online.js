@@ -16,22 +16,24 @@ var connectionString = process.env.HEROKU_POSTGRESQL_COPPER_URL || 'postgres://f
 
 
 app.get("/online",function(req,res){
-	res.sendfile("./public/index.html");
+	res.sendFile(__dirname +"/public/index.html");
 });
 
 
 app.get('/download', function(req, res){
   var file = __dirname + '/public/videos/test.h264';
-  res.download(file); // Set disposition and send it.
+  res.sendStatus(202);
+  res.download(file,'',function(err){
+  }); // Set disposition and send it.
 });
 
 
 app.get("/kakao",function(req,res){
-	res.sendfile("./public/htm/kakaotalkshare.htm");
+	res.sendfile(__dirname +"/public/htm/kakaotalkshare.htm");
 });
 
 app.get("/test",function(req,res){
-	res.sendfile("./public/htm/test.html");
+	res.sendfile(__dirname +"/public/htm/test.html");
 });
 /*
 GET FUNCTION : send back the information of all players registered online
