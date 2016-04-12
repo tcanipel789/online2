@@ -307,9 +307,9 @@ app.post('/online/:DEVICE/event', function(req, res) {
 	var data = req.body;
 	var name = data.string.name || null;
 	var type = data.string.type || null;
-	var event = data.string.type || null;
-	var broadcast = data.string.type || null;
-	var media = data.string.type || null;
+	var event = data.string.event || null;
+	var broadcast = data.string.broadcast || null;
+	var media = data.string.media || null;
 	var date = new Date().toISOString();
     
 	if( name != null){
