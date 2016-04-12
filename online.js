@@ -277,7 +277,7 @@ app.get("/online/broadcasts/:ID/playerCount",function(req,res){
     }});
 });
 /*
-GET FUNCTION : send the number of player linked to this broadcast
+GET FUNCTION : send the last 10 events of the player / broadcast
 */
 app.get("/online/:DEVICE/events/:BROADCAST",function(req,res){
 	console.log("GET > the device "+req.params.DEVICE+" is requesting last 10 events on "+req.params.BROADCAST);
@@ -288,7 +288,8 @@ app.get("/online/:DEVICE/events/:BROADCAST",function(req,res){
     // Get a Postgres client from the connection pool
     pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
-		    client.query("SELECT date,event,type,broadcast FROM events WHERE (device_name=($1) AND broadcast=$2) ORDER BY id DESC limit 10;",[name,broadcast], function(err, result) {
+			//SELECT date,event,type,broadcast FROM events WHERE (device_name=($1) AND broadcast=$2) ORDER BY id DESC limit 10;
+		    client.query("SELECT date,event,type,broadcast FROM events WHERE (device_name=($1)) ORDER BY id DESC limit 10;",[name,broadcast], function(err, result) {
 			//call `done()` to release the client back to the pool
 			done();
 			if(err) {
@@ -308,16 +309,17 @@ app.post('/online/:DEVICE/event', function(req, res) {
 	var type = data.string.type || null;
 	var event = data.string.type || null;
 	var broadcast = data.string.type || null;
+	var media = data.string.type || null;
 	var date = new Date().toISOString();
     
 	if( name != null){
 		pg.connect(connectionString, function(err, client, done) {
 			if (client != null){
 				console.log("> adding a new event from "+ name);
-					client.query("INSERT INTO events (device_name,type,event,broadcast,date)VALUES ($1,$2,$3,$4)", [name,type,event,broadcast,date], function(err, result){
+					client.query("INSERT INTO events (device_name,type,event,broadcast,date,media)VALUES ($1,$2,$3,$4,$5)", [name,type,event,broadcast,date,media], function(err, result){
 					done();
 						if(err) {
-						  return console.error('> Error running media delete', err);
+						  return console.error('> Error running add event ', err);
 						}
 					})
 			}

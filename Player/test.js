@@ -63,10 +63,17 @@ var download = function(url, dest, cb) {
   });
 };
 
+var _mac = "b827eb11711";
+var _media = "6";
+
 download(server+"/download", "test.h264", function(res,err,msg){
+	var eventData =  {name: _mac, type: "media", event: "-",media: _media};
     if(res){
 		if( res == 1){
 			console.log("download finished event");
+				eventData.event = "finished";
+				var jsonEvent = JSON.stringify(eventData);
+				httpPost(jsonEvent,'/online/'+_mac+'/event');
 			try {
 				var stats = fs.statSync(msg);
 				console.log("Total file size: "+stats.size);
@@ -75,14 +82,90 @@ download(server+"/download", "test.h264", function(res,err,msg){
 				console.log("-- fatal error --");
 			}
 		}
-		if( res == 2)
-			console.log("downloading event : "+msg);
-		
-		if( res == 3)
+		if( res == 2){
+			console.log("data event : "+msg);
+			eventData.type = "media-data";
+			eventData.event = msg;
+			var jsonEvent = JSON.stringify(eventData);
+			httpPost(jsonEvent,'/online/'+_mac+'/event');
+		}
+		if( res == 3){
 			console.log("waiting a slot on the server ");
+			eventData.event = "waiting a slot on the server ";
+			var jsonEvent = JSON.stringify(eventData);
+			httpPost(jsonEvent,'/online/'+_mac+'/event');
+		}
 	}
 	if(err) {
 		console.log(err);
+		eventData.event = err;
+		var jsonEvent = JSON.stringify(eventData);
+		httpPost(jsonEvent,'/online/'+_mac+'/event');
 	}
 	
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+/  Main function to be call whenever sending Json to the server
+*/
+var serverIp   = 'arcane-oasis-9800.herokuapp.com';
+function httpPost(codestring, path) {
+	
+	// Build the post string from an object
+	var post_data = '{"string": '+codestring+'}';
+	// An object of options to indicate where to post to
+	var post_options = {
+	  host: serverIp,
+	  //port: serverPortSSL,
+	  path: path,
+	  method: 'POST',
+	  headers: {
+		  'Content-Type': 'application/json',
+	  }
+	};
+	// Set up the request
+	var post_req = http.request(post_options, function(res) {
+		 //console.log('>HTTP STATUS: ' + res.statusCode);
+	});
+	post_req.on('error', function(e) {
+		console.error("=> Error when posting device information on the server : " + e);
+	});
+	// post the data
+	post_req.write(post_data);
+	post_req.end();
+}

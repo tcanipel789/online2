@@ -51,5 +51,5 @@ query.on('end', function() { client9.end(); });
 
 var client10 = new pg.Client(connectionString);
 client10.connect();
-var query = client10.query('CREATE TABLE events(id SERIAL PRIMARY KEY, device_name VARCHAR(20) not null,type VARCHAR(40), event VARCHAR(500),broadcast VARCHAR(40),date VARCHAR(25))');
+var query = client10.query('CREATE TABLE events(id SERIAL PRIMARY KEY, device_name VARCHAR(20) not null,type VARCHAR(40), event VARCHAR(500),broadcast VARCHAR(40),date VARCHAR(25),media VARCHAR(25))');
 query.on('end', function() { client.end(); });
