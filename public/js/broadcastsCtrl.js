@@ -23,6 +23,9 @@ $scope.tags='';
 $scope.medias='';
 $scope.mediasOriginal='';
 
+$scope.test=function(media){
+	media.value = Math.floor(Math.random() * 100 + 1);
+}
 
 $scope.tabGI = function(){
 	if ($scope.tab1 == false){
@@ -180,11 +183,13 @@ $scope.initMediasPerDevice=function(){
 	$scope.mediaCount=0;
 	var max;
 	var medias=[];
+	var media;
 	for(var i = 0, max = $scope.mediasOriginal.length; i < max; i++)
 	{
 	  if($scope.mediasOriginal[i].selected)
 	  {
-		medias.push($scope.mediasOriginal[i]);
+	
+		medias.push(angular.copy($scope.mediasOriginal[i]));
 	  }
 	}
 	return medias;

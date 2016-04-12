@@ -38,7 +38,9 @@
 	  </div>
 	</td>
 	<td>
-	 <uib-progressbar ng-repeat="media in device.medias" type="success" max="100" value="media.value" class="progress-striped active"><span style="color:white; white-space:nowrap;"> {{media.name}}</span></uib-progressbar>
+	 <div ng-repeat="media in device.medias">
+	  <uib-progressbar ng-click="test(media)" type="success" max="100" value="media.value" class="progress-striped active"><span style="color:black; white-space:nowrap;">{{media.name}}</span></uib-progressbar>
+	 </div>
 	</td>
    </tbody>
 </table>

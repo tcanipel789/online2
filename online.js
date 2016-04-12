@@ -639,7 +639,7 @@ app.get("/online/broadcasts/:ID/medias",function(req,res){
 
 	pg.connect(connectionString, function(err, client, done) {
 		if (client != null){
-		client.query("SELECT id_media,name,selected FROM broadcast_media INNER JOIN medias ON broadcast_media.id_media = medias.id WHERE id_broadcast=$1;",[req.params.ID], function(err, result) {
+		client.query("SELECT id_media,name,selected,ftplink,sha1 FROM broadcast_media INNER JOIN medias ON broadcast_media.id_media = medias.id WHERE id_broadcast=$1;",[req.params.ID], function(err, result) {
 			//call `done()` to release the client back to the pool
 			done();
 			if(err) {
