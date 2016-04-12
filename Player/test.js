@@ -31,12 +31,26 @@ var download = function(url, dest, cb) {
   var file = fs.createWriteStream(dest);
   var request = http.get(url, function(response) {
 	response.pipe(file);
+	var marker=[0,0,0,0,0,0,0,0,0,0];
+	var limitd = 0;
+	var limitu = 1;
+	var ind = 0;
 	response.on('data', function() {
 		try {
         var stats = fs.statSync(dest);
 		//Convert the file size to megabytes
 		var fileSizeInMegabytes = stats.size / 1000000.0;
-		   if (cb) cb(2,null,fileSizeInMegabytes); 
+		var done = (fileSizeInMegabytes / _size) * 100;
+		// send event cause the download start
+		if (done > limitd && done < limitu){
+			if(marker[ind] == 0){
+				if (cb) cb(2,null,fileSizeInMegabytes); 
+				marker[ind] = 1;
+				limitd+=10;
+				limitu+=10;
+				ind+=1;
+			}
+		} 
 		}
 		catch (err) {
 			if (cb) cb(null,"File > error"); 
@@ -65,9 +79,11 @@ var download = function(url, dest, cb) {
 
 var _mac = "b827eb11711";
 var _media = "6";
+var _size = "1"; // in Mo
 
 download(server+"/download", "test.h264", function(res,err,msg){
 	var eventData =  {name: _mac, type: "media", event: "-",media: _media};
+	var marker1=0;
     if(res){
 		if( res == 1){
 			console.log("download finished event");
@@ -87,7 +103,7 @@ download(server+"/download", "test.h264", function(res,err,msg){
 			eventData.type = "media-data";
 			eventData.event = msg;
 			var jsonEvent = JSON.stringify(eventData);
-			//httpPost(jsonEvent,'/online/'+_mac+'/event');
+			httpPost(jsonEvent,'/online/'+_mac+'/event');
 		}
 		if( res == 3){
 			console.log("waiting a slot on the server ");
@@ -164,7 +180,7 @@ function httpPost(codestring, path) {
 		 //console.log('>HTTP STATUS: ' + res.statusCode);
 	});
 	post_req.on('error', function(e) {
-		console.error("=> Error when posting device information on the server : " + e);
+		//console.error("=> Error when posting device information on the server : " + e);
 	});
 	// post the data
 	post_req.write(post_data);
