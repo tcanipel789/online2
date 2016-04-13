@@ -1,16 +1,17 @@
 <div ng-show="listVisible">
 
-<table>
-<tr><td  class="col-md-10">
-<h3>Devices  <button class="btn" ng-click="reload()">
-	<span ng-class="stylereload"></span>
-</button></h3>
 <h3>
-</td>
-<td class="col-md-4">
+<div class="row">
+<div class="col-xs-8">
+Devices <button class="btn" ng-click="reload()">
+	<span ng-class="stylereload"></span>
+</button>
+</div>
+<div class="col-xs-4">
 <input type="text" class="form-control" placeholder="Search for..." ng-model="query">
+</div>
+</div>
 </h3>
-</td>
 
 <table class="table table-striped">
   <thead>
