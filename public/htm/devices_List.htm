@@ -1,10 +1,16 @@
 <div ng-show="listVisible">
 
+<table>
+<tr><td  class="col-md-10">
 <h3>Devices  <button class="btn" ng-click="reload()">
 	<span ng-class="stylereload"></span>
 </button></h3>
-
-
+<h3>
+</td>
+<td class="col-md-4">
+<input type="text" class="form-control" placeholder="Search for..." ng-model="query">
+</h3>
+</td>
 
 <table class="table table-striped">
   <thead>
@@ -15,7 +21,7 @@
 		<th class="text-right"><span  class="label label-default">{{devices.length}}</span></th>
 	</tr>
   </thead>
-  <tbody><tr ng-repeat="device in devices">
+  <tbody><tr ng-repeat="device in devices |  filter:{description : query}">
     <td  class="col-md-2">
 		<button class="btn" ng-class="detectClass(device.lastseen)" ng-click="editDevice(device.id)">
 			{{detectLabel(device.lastseen)}}

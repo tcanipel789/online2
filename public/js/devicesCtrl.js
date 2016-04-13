@@ -15,6 +15,7 @@ $scope.description = '';
 $scope.owner = '';
 $scope.newtag = '';
 $scope.statusSavingTag=false;
+$scope.query ='';
 
 $scope.edit = true;
 $scope.error = false;
